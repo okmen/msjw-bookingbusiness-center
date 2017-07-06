@@ -8,4 +8,9 @@ import cn.booking.business.service.IBookingBusinessService;
 @Service("bookingBusinessService")
 public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 	
+	
+	
+	
+	
+	
 }
