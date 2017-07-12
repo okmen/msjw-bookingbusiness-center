@@ -40,8 +40,8 @@ public class BookingBusinessServiceTest extends TestCase {
 		String btId = "1";
 		String arg0 = null;
 		String arg1 = null;
-		OrgVO orgVO = iBookingBusinessService.getOrgsByBusinessTypeId(btId, arg0, arg1);
-		System.out.println(orgVO);
+		List<OrgVO> orgsByBusinessTypeId = iBookingBusinessService.getOrgsByBusinessTypeId(btId, arg0, arg1);
+		System.out.println(orgsByBusinessTypeId);
 	}
 	
 	@Test
@@ -64,6 +64,11 @@ public class BookingBusinessServiceTest extends TestCase {
 		String businessTypeId = "1";
 		List<AppTimeHelper> appTimeHelpers = iBookingBusinessService.getAppTimes("2017-07-25", orgId, businessTypeId, "", "");
 		System.out.println(appTimeHelpers);
+	}
+	
+	@Test
+	public void getIdTypes() throws Exception {
+			iBookingBusinessService.getIdTypes("402882824747f258014754a501281430", "", "");
 	}
 	
 }
