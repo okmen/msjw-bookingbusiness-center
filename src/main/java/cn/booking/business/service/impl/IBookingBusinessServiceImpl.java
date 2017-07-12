@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
+import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
@@ -30,8 +30,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 	/**
 	 * 获取车辆类型列表
 	 */
-	public List<IdTypeVO> getCarTypes() throws Exception {
-		List<IdTypeVO> idTypeVOs = null;
+	public List<CarTypeVO> getCarTypes() throws Exception {
+		List<CarTypeVO> carTypeVOs = null;
 		String method = "getCarTypes";
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("arg0", "");
@@ -42,12 +42,12 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			JSONObject result = jsonObject.getJSONObject("result");
 			String carTypeVO = result.getString("CarTypeVO");
-			idTypeVOs =JSON.parseArray(carTypeVO, IdTypeVO.class);
+			carTypeVOs =JSON.parseArray(carTypeVO, CarTypeVO.class);
 		} catch (Exception e) {
 			logger.error("getCarTypes 失败 ， map = " + map);
 			throw e;
 		}
-		return idTypeVOs;
+		return carTypeVOs;
 	}
 	
 	@Override
