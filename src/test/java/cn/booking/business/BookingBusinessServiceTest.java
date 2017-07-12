@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
-import cn.booking.business.bean.IdTypeVO;
+import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.service.IBookingBusinessService;
 import junit.framework.TestCase;
@@ -25,8 +25,8 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void getCarTypes() throws Exception {
-		List<IdTypeVO> idTypeVOs = iBookingBusinessService.getCarTypes();
-		System.out.println(idTypeVOs);
+		List<CarTypeVO> carTypeVOs = iBookingBusinessService.getCarTypes();
+		System.out.println(carTypeVOs);
 	}
 	
 	@Test
