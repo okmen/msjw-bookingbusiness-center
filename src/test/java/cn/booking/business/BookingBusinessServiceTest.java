@@ -13,6 +13,7 @@ import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.OrgVO;
+import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.service.IBookingBusinessService;
 import junit.framework.TestCase;
 
@@ -70,5 +71,9 @@ public class BookingBusinessServiceTest extends TestCase {
 	public void getIdTypes() throws Exception {
 			iBookingBusinessService.getIdTypes("402882824747f258014754a501281430", "", "");
 	}
-	
+	@Test
+	public void simpleSendMessage() throws Exception{
+		SmsInfoVO smsInfoVO = iBookingBusinessService.simpleSendMessage("13652311206", "0", "1", "", "1", "测试", "622822198502074110", "622822198502074110", "JD30");
+		System.out.println(smsInfoVO);
+	}
 }

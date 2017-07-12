@@ -18,6 +18,7 @@ import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
+import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.sdk.webservice.WebServiceClient;
@@ -205,5 +206,34 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 			throw e;
 		}
 		return dateTime;
+	}
+
+	@Override
+	public SmsInfoVO simpleSendMessage(String mobile,String idType,String lx,String ip,String bookerType,String bookerName,String bookerIdNumber,String idNumber,String codes) throws Exception {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("mobile", mobile);
+		map.put("idType", idType);
+		map.put("lx", lx);
+		map.put("ip", ip);
+		map.put("bookerType", bookerType);
+		map.put("bookerName", bookerName);
+		map.put("bookerIdNumber", bookerIdNumber);
+		map.put("idNumber", idNumber);
+		map.put("codes", codes);
+		SmsInfoVO smsInfoVO = null;
+		String method = "simpleSendMessage";
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			String result = jsonObject.getString("result");
+			smsInfoVO = JSON.parseObject(JSON.toJSONString(jsonObject), SmsInfoVO.class);
+		} catch (Exception e) {
+			logger.error("getAppointmentDate 失败 ， map = " + map);
+			throw e;
+		}
+		return smsInfoVO;
 	}
 }
