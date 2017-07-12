@@ -65,7 +65,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 			System.out.println(BusinessTypeVO);
 			businessTypeVOs =JSON.parseArray(BusinessTypeVO, BusinessTypeVO.class);
 		} catch (Exception e) {
-			logger.error("getCarTypes 失败 ， map = " + map);
+			logger.error("getBusinessTypes 失败 ， map = " + map);
 			throw e;
 		}
 		return businessTypeVOs;
