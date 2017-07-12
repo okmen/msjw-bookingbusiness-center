@@ -1,6 +1,5 @@
 package cn.booking.business;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.junit.Test;
@@ -12,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.IdTypeVO;
+import cn.booking.business.bean.OrgVO;
 import cn.booking.business.service.IBookingBusinessService;
 import junit.framework.TestCase;
 
@@ -24,21 +24,29 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void getCarTypes() throws Exception {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("arg0", "");
-		map.put("arg1", "");
-		List<IdTypeVO> idTypeVOs = iBookingBusinessService.getCarTypes(map);
+		List<IdTypeVO> idTypeVOs = iBookingBusinessService.getCarTypes();
 		System.out.println(idTypeVOs);
 	}
 	
 	@Test
 	public void getBusinessTypes() throws Exception {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("type", "0");
-		map.put("part", "1");
-		map.put("arg0", "");
-		map.put("arg1", "");
-		List<BusinessTypeVO> businessTypeVOs = iBookingBusinessService.getBusinessTypes(map);
+		List<BusinessTypeVO> businessTypeVOs = iBookingBusinessService.getBusinessTypes("0","1","","");
 		System.out.println(businessTypeVOs);
+	}
+	
+	@Test
+	public void getOrgsByBusinessTypeIdTest() throws Exception {
+		String btId = "1";
+		String arg0 = null;
+		String arg1 = null;
+		OrgVO orgVO = iBookingBusinessService.getOrgsByBusinessTypeId(btId, arg0, arg1);
+		System.out.println(orgVO);
+	}
+	
+	@Test
+	public void findOrgByOrgId() throws Exception{
+		String orgId = "e4e48584399473d201399b0c4ad62b39";
+		OrgVO orgVO = iBookingBusinessService.findOrgByOrgId(orgId);
+		System.out.println(orgVO);
 	}
 }

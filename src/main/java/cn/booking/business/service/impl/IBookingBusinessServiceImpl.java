@@ -27,9 +27,12 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 	/**
 	 * 获取车辆类型列表
 	 */
-	public List<IdTypeVO> getCarTypes(LinkedHashMap<String, Object> map) throws Exception {
+	public List<IdTypeVO> getCarTypes() throws Exception {
 		List<IdTypeVO> idTypeVOs = null;
 		String method = "getCarTypes";
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("arg0", "");
+		map.put("arg1", "");
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
@@ -43,10 +46,16 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 		}
 		return idTypeVOs;
 	}
+	
 	@Override
-	public List<BusinessTypeVO> getBusinessTypes(LinkedHashMap<String, Object> map) throws Exception {
+	public List<BusinessTypeVO> getBusinessTypes(String type,String part,String arg0,String arg1) throws Exception {
 		List<BusinessTypeVO> businessTypeVOs = null;
 		String method = "getBusinessTypes";
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("type",type);
+		map.put("part",part);
+		map.put("arg0", null == arg0 ? "" : arg0);
+		map.put("arg1", null == arg1 ? "" : arg1);
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
@@ -61,21 +70,82 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 		}
 		return businessTypeVOs;
 	}
-	@Override
-	public List<IdTypeVO> getIdTypes(LinkedHashMap<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public OrgVO findOrgByOrgId(LinkedHashMap<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public OrgVO getOrgsByBusinessTypeId(LinkedHashMap<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
-	
+	@Override
+	public IdTypeVO getIdTypes(String businessTypeId,String arg0,String arg1) throws Exception {
+		IdTypeVO idTypeVO = new IdTypeVO();
+		String method = "getIdTypes";
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("businessTypeId",businessTypeId);
+		map.put("arg0", null == arg0 ? "" : arg0);
+		map.put("arg1", null == arg1 ? "" : arg1);
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			JSONObject result = jsonObject.getJSONObject("result");
+			String BusinessTypeVO = result.getString("BusinessTypeVO");
+			System.out.println(BusinessTypeVO);
+			idTypeVO =JSON.parseObject(BusinessTypeVO, IdTypeVO.class);
+		} catch (Exception e) {
+			logger.error("getCarTypes 失败 ， map = " + map);
+			throw e;
+		}
+		return idTypeVO;
+	}
+	@Override
+	public OrgVO findOrgByOrgId(String orgId) throws Exception {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("orgId", orgId);
+		OrgVO orgVO = new OrgVO();
+		String method = "findOrgByOrgId";
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			String result = jsonObject.getString("result");
+			if("00".equals(code)){
+				orgVO =JSON.parseObject(result, OrgVO.class);
+				orgVO.setCode("0000");
+			}else{
+				orgVO.setMsg(msg);
+				orgVO.setCode(code);
+			}
+		} catch (Exception e) {
+			logger.error("findOrgByOrgId 失败 ， orgId = " + orgId);
+			throw e;
+		}
+		return orgVO;
+	}
+	@Override
+	public OrgVO getOrgsByBusinessTypeId(String btId,String arg0,String arg1) throws Exception {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("btId", btId);
+		map.put("arg0", null == arg0 ? "" : arg0);
+		map.put("arg1", null == arg1 ? "" : arg1);
+		OrgVO orgVO = new OrgVO();
+		String method = "getOrgsByBusinessTypeId";
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			String result = jsonObject.getString("result");
+			if("00".equals(code)){
+				orgVO =JSON.parseObject(result, OrgVO.class);
+				orgVO.setCode("0000");
+			}else{
+				orgVO.setMsg(msg);
+				orgVO.setCode(code);
+			}
+		} catch (Exception e) {
+			logger.error("getOrgsByBusinessTypeId 失败 ， btId = " + btId + ", arg0=" +arg0 + ",arg1=" + arg1);
+			throw e;
+		}
+		return orgVO;
+	}
 }
