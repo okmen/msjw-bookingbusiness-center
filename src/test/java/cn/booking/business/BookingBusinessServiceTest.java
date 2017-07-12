@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
@@ -49,4 +50,20 @@ public class BookingBusinessServiceTest extends TestCase {
 		OrgVO orgVO = iBookingBusinessService.findOrgByOrgId(orgId);
 		System.out.println(orgVO);
 	}
+	
+	@Test
+	public void getAppointmentDatethrows() throws Exception{
+		String orgId = "e4e48584399473d201399b0c4ad62b39";
+		String businessTypeId = "1";
+		List<String> strings = iBookingBusinessService.getAppointmentDate(orgId, businessTypeId, "", "");
+		System.out.println(strings);
+	}
+	@Test
+	public void getAppTimes() throws Exception{
+		String orgId = "e4e48584399473d201399b0c4ad62b39";
+		String businessTypeId = "1";
+		List<AppTimeHelper> appTimeHelpers = iBookingBusinessService.getAppTimes("2017-07-25", orgId, businessTypeId, "", "");
+		System.out.println(appTimeHelpers);
+	}
+	
 }

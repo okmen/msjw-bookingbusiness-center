@@ -1,6 +1,7 @@
 package cn.booking.business.service.impl;
 
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -10,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
@@ -147,5 +150,65 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 			throw e;
 		}
 		return orgVO;
+	}
+
+	@Override
+	public List<AppTimeHelper> getAppTimes(String date, String orgId, String businessTypeId, String carTypeId,String optlittleCar) throws Exception {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("date", date);
+		map.put("orgId", orgId);
+		map.put("businessTypeId", businessTypeId);
+		map.put("carTypeId", carTypeId);
+		map.put("optlittleCar", optlittleCar);
+		List<AppTimeHelper> dateTime = new ArrayList<AppTimeHelper>();
+		String method = "getAppTimes";
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			JSONObject result = jsonObject.getJSONObject("result");
+			if("00".equals(code)){
+				String date1 = result.getString("string");
+				dateTime = JSON.parseArray(date1, AppTimeHelper.class);
+			}else{
+				
+			}
+		} catch (Exception e) {
+			logger.error("getAppointmentDate 失败 ， map = " + map);
+			throw e;
+		}
+		return dateTime;
+	}
+
+	@Override
+	public List<String> getAppointmentDate(String orgId, String businessTypeId, String arg0, String arg1)throws Exception {
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("orgId", orgId);
+		map.put("businessTypeId", businessTypeId);
+		map.put("arg0", arg0);
+		map.put("arg1", arg1);
+		List<String> dateTime = new ArrayList<String>();
+		String method = "getAppointmentDate";
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			JSONObject result = jsonObject.getJSONObject("result");
+			if("00".equals(code)){
+				String date = result.getString("string");
+				dateTime = JSON.parseArray(date, String.class);
+			}else{
+			}
+		} catch (Exception e) {
+			logger.error("getAppointmentDate 失败 ， map = " + map);
+			throw e;
+		}
+		return dateTime;
 	}
 }
