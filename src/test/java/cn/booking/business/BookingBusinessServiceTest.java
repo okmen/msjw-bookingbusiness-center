@@ -11,9 +11,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
-import cn.booking.business.bean.CarTypeVO;<<<<<<<Updated upstream
-import cn.booking.business.bean.CreateVehicleInfoVo;=======
-import cn.booking.business.bean.DriveInfoVO;>>>>>>>Stashed changes
+import cn.booking.business.bean.CarTypeVO;
+import cn.booking.business.bean.CreateVehicleInfoVo;
+import cn.booking.business.bean.DriveInfoVO;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.bean.VehicleInfoVO;
