@@ -16,6 +16,7 @@ import cn.booking.business.bean.CreateVehicleInfoVo;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.service.IBookingBusinessService;
+import cn.sdk.bean.BaseBean;
 import junit.framework.TestCase;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -56,15 +57,15 @@ public class BookingBusinessServiceTest extends TestCase {
 	@Test
 	public void getAppointmentDatethrows() throws Exception{
 		String orgId = "e4e48584399473d201399b0c4ad62b39";
-		String businessTypeId = "1";
+		String businessTypeId = "4028828239a4a4c60139a4fb36ef0007";
 		List<String> strings = iBookingBusinessService.getAppointmentDate(orgId, businessTypeId, "", "");
 		System.out.println(strings);
 	}
 	@Test
 	public void getAppTimes() throws Exception{
 		String orgId = "e4e48584399473d201399b0c4ad62b39";
-		String businessTypeId = "1";
-		List<AppTimeHelper> appTimeHelpers = iBookingBusinessService.getAppTimes("2017-07-25", orgId, businessTypeId, "", "");
+		String businessTypeId = "4028828239a4a4c60139a4fb36ef0007";
+		List<AppTimeHelper> appTimeHelpers = iBookingBusinessService.getAppTimes("2017-07-14", orgId, businessTypeId, "e4e48584399473d20139947fff4e2b2e", "");
 		System.out.println(appTimeHelpers);
 	}
 	
@@ -74,7 +75,8 @@ public class BookingBusinessServiceTest extends TestCase {
 	}
 	@Test
 	public void simpleSendMessage() throws Exception{
-		SmsInfoVO smsInfoVO = iBookingBusinessService.simpleSendMessage("13652311206", "0", "1", "", "1", "测试", "622822198502074110", "622822198502074110", "JD30");
+		SmsInfoVO smsInfoVO = iBookingBusinessService.simpleSendMessage("17688758320", 
+				"0", "2", "", "0", "测试", "622822198502074112", "622822198502074112", "JDC");
 		System.out.println(smsInfoVO);
 	}
 	
@@ -82,27 +84,29 @@ public class BookingBusinessServiceTest extends TestCase {
 	@Test
 	public void testCreateVehicleInfo_JD06reateVehicleInfo_JD06() throws Exception{
 		CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
-		vo.setOrgId("e4e48584399473d201399b0d23452b3a");  //预约地点Id
+		vo.setOrgId("e4e48584399473d201399b0c4ad62b39");  //预约地点Id
 		vo.setBusinessTypeId("4028828239a4a4c60139a4fb36ef0007");  //业务类型id
-		vo.setName("测试张三"); //姓名
+		vo.setName("测试"); //姓名
 		vo.setIdTypeId("e4e48584399473d20139947f125e2b2c");		//证件种类id
-		vo.setIdNumber("430211231222131213"); //证件号码
+		vo.setIdNumber("622822198502074112"); //证件号码
 		vo.setMobile("17688758320");	//手机号码
-		vo.setAppointmentDate("2017-03-31 9:00-10:00");  //预约日期
-		vo.setAppointmentTime("2017-07-12");	//预约时间
-		vo.setCarTypeId("e4e48584399473d20139947fff4e2b2e"); 	//号牌种类
-		vo.setCarFrame("1234"); 	//车架号
-		vo.setPlatNumber("1234");   //车牌号或车架号
-		vo.setBookerName("测试张三");  //预约人姓名
-		vo.setBookerIdNumber("430211231222131213"); //预约人身份证号码
+		vo.setAppointmentDate("2017-07-24");  //预约日期
+		vo.setAppointmentTime("12:00-17:00");	//预约时间
+		vo.setCarTypeId("e4e48584399473d20139947fff4e2b2e"); 	//号牌种类  小型汽车（蓝色）
+		vo.setCarFrame("5563"); 	//车架号
+		vo.setPlatNumber("粤B6A42Q");   //车牌号或车架号
+		vo.setBookerName("测试");  //预约人姓名
+		vo.setBookerIdNumber("622822198502074112"); //预约人身份证号码
 		vo.setBookerType("0"); 	//预约方式
-		vo.setOptlittleCar("1"); 	//车辆产地
-		vo.setIndexType("K31"); 	//指标类型
-		vo.setIndexNo("K31"); 		//指标号/公证号/车辆识别代号
-		vo.setUseCharater("A"); 	//使用性质
-		vo.setArg0("DF");  //车辆型号
+		vo.setOptlittleCar(""); 	//车辆产地
+		vo.setIndexType(""); 	//指标类型
+		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
+		vo.setUseCharater("123"); 	//使用性质
+		vo.setArg0("DH");  //车辆型号
 		vo.setArg1("17688758320"); 	//手机号码
-		vo.setArg2("12311");	 	//短信验证码
-		iBookingBusinessService.createVehicleInfo_JD06(vo);
+		vo.setArg2("464032");	 	//短信验证码
+		vo.setRzjs("11");
+		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
+		System.out.println(bean.toJson());
 	}
 }

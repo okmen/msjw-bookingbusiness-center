@@ -23,6 +23,7 @@ import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
 import cn.booking.business.service.IBookingBusinessService;
+import cn.sdk.bean.BaseBean;
 import cn.sdk.webservice.WebServiceClient;
 @SuppressWarnings(value="all")
 @Service("bookingBusinessService")
@@ -240,8 +241,9 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 	}
 
 	@Override
-	public Map<String, String> createVehicleInfo_JD06(CreateVehicleInfoVo vehicleInfoVo) throws Exception {
-		logger.debug("【预约类服务】换领机动车登记证书createVehicleInfo_JD06...");
+	public BaseBean createVehicleInfo(CreateVehicleInfoVo vehicleInfoVo) throws Exception {
+		BaseBean refBean = new BaseBean();
+		logger.debug("【预约类服务】机动车预约信息写入createVehicleInfo... 业务类型id="+vehicleInfoVo.getBusinessTypeId());
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("orgId", vehicleInfoVo.getOrgId());  //预约地点
@@ -258,6 +260,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 		map.put("bookerName", vehicleInfoVo.getBookerName());	//预约人姓名
 		map.put("bookerIdNumber", vehicleInfoVo.getBookerIdNumber());	//预约人身份证号码
 		map.put("bookerType", vehicleInfoVo.getBookerType());	//预约方式
+		map.put("rzjs", vehicleInfoVo.getRzjs());    //认证角色
 		map.put("optlittleCar", vehicleInfoVo.getOptlittleCar());	//车辆产地
 		map.put("indexType ", vehicleInfoVo.getIndexType());	//指标类型
 		map.put("indexNo ", vehicleInfoVo.getIndexNo());	//指标号/公证号/车辆识别代号
@@ -265,22 +268,21 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService{
 		map.put("arg0", vehicleInfoVo.getArg0());	//车辆型号
 		map.put("arg1", vehicleInfoVo.getArg1());	//手机号码
 		map.put("arg2", vehicleInfoVo.getArg2());	//短信验证码
-		map.put("rzjs", "11");    //认证角色
 		
 		String method = "newCreateVehicleInfo";
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
 			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
-			String code = jsonObject.getString("code");
-			String msg = jsonObject.getString("msg");
-			String result = jsonObject.getString("result");
-			logger.debug("【预约类服务】换领机动车登记证书结果:"+jsonObject);
+			refBean.setCode(jsonObject.getString("code"));
+			refBean.setMsg(jsonObject.getString("msg"));
+			refBean.setData(jsonObject.getString("result"));
+			logger.debug("【预约类服务】机动车预约信息写入结果:"+jsonObject);
 		} catch (Exception e) {
-			logger.error("getAppointmentDate 失败 ， map = " + map);
+			logger.error("【预约类服务】机动车预约信息写入异常 ， map = " + map);
 			throw e;
 		}
-		return null;
+		return refBean;
 	}
 	
 }
