@@ -12,9 +12,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
+<<<<<<< Updated upstream
 import cn.booking.business.bean.CreateVehicleInfoVo;
+=======
+import cn.booking.business.bean.DriveInfoVO;
+>>>>>>> Stashed changes
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
+import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.sdk.bean.BaseBean;
 import junit.framework.TestCase;
@@ -80,6 +85,7 @@ public class BookingBusinessServiceTest extends TestCase {
 		System.out.println(smsInfoVO);
 	}
 	
+<<<<<<< Updated upstream
 	//换领机动车登记证书
 	@Test
 	public void testCreateVehicleInfo_JD06reateVehicleInfo_JD06() throws Exception{
@@ -108,5 +114,21 @@ public class BookingBusinessServiceTest extends TestCase {
 		vo.setRzjs("11");
 		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
 		System.out.println(bean.toJson());
+=======
+	@Test
+	public void cancel() throws Exception{
+		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "17071311121E", "18312518169");
+		System.out.println(smsInfoVO);
+	}
+	@Test
+	public void getDriveInfo() throws Exception{
+		DriveInfoVO driveInfoVO = iBookingBusinessService.getDriveInfo("17071311121E", "622822198502074110", "", "");
+		System.out.println(driveInfoVO);
+	}
+	@Test
+	public void getVehicleInfo() throws Exception{
+		VehicleInfoVO vehicleInfoVO = iBookingBusinessService.getVehicleInfo("17071311121E", "622822198502074110", "", "","");
+		System.out.println(vehicleInfoVO);
+>>>>>>> Stashed changes
 	}
 }
