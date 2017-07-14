@@ -28,6 +28,7 @@ import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.util.StringUtil;
 import cn.sdk.webservice.WebServiceClient;
 
 @SuppressWarnings(value = "all")
@@ -179,10 +180,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			String msg = jsonObject.getString("msg");
 			JSONObject result = jsonObject.getJSONObject("result");
 			if ("00".equals(code)) {
-				String date1 = result.getString("string");
-				dateTime = JSON.parseArray(date1, AppTimeHelper.class);
-			} else {
-
+				String data1=result.getString("com.rich.admin.entity.appointment.AppTimeHelper");
+				dateTime = JSON.parseArray(data1, AppTimeHelper.class);
 			}
 		} catch (Exception e) {
 			logger.error("getAppointmentDate 失败 ， map = " + map);
@@ -197,8 +196,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("orgId", orgId);
 		map.put("businessTypeId", businessTypeId);
-		map.put("arg0", arg0);
-		map.put("arg1", arg1);
+		map.put("arg0", null == arg0 ? "" : arg0);
+		map.put("arg1", null == arg1 ? "" : arg1);
 		List<String> dateTime = new ArrayList<String>();
 		String method = "getAppointmentDate";
 		JSONObject jsonObject = new JSONObject();
@@ -350,9 +349,9 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("bookerNumber", bookerNumber);
 		map.put("idNumber", idNumber);
-		map.put("platNumber", platNumber);
-		map.put("businessTypeId", businessTypeId);
-		map.put("organizationId", organizationId);
+		map.put("platNumber", null == platNumber ? "" : platNumber);
+		map.put("businessTypeId", null == businessTypeId ? "" : businessTypeId);
+		map.put("organizationId", null == organizationId ? "" : organizationId);
 		VehicleInfoVO vehicleInfoVO = null;
 		String method = "getVehicleInfo";
 
@@ -360,8 +359,13 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
 			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
-			vehicleInfoVO = JSON.parseObject(JSON.toJSONString(jsonObject), VehicleInfoVO.class);
-
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			JSONObject result = jsonObject.getJSONObject("result");
+			if(result!=null){
+				String data=result.getString("VehicleInfoVO");
+				vehicleInfoVO = JSON.parseObject(data, VehicleInfoVO.class);
+			}
 		} catch (Exception e) {
 			logger.error("getVehicleInfo 失败 ， map = " + map);
 			throw e;
