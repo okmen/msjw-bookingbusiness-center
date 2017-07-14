@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
+import cn.booking.business.bean.CreateDriveinfoVo;
 import cn.booking.business.bean.CreateVehicleInfoVo;
 import cn.booking.business.bean.DriveInfoVO;
 import cn.booking.business.bean.OrgVO;
@@ -27,7 +28,33 @@ public class BookingBusinessServiceTest extends TestCase {
 	@Autowired
     @Qualifier("bookingBusinessService")
     private IBookingBusinessService iBookingBusinessService;
-	
+	/**
+	 * 驾驶证预约
+	 * @throws Exception
+	 */
+	@Test
+	public void testcreateDrivveInfo() throws Exception{
+		CreateDriveinfoVo cv = new CreateDriveinfoVo();
+		cv.setOrgId("e4e48584399473d20139947d9ee82b2a");
+		cv.setBusinessTypeId("4028828244914e4401455efaf3e433dc");
+		cv.setName("测试");
+		cv.setIdTypeId("e4e48584399473d20139947f125e2b2c");
+		cv.setMobile("13627267056");
+		cv.setIdNumber("42138119910422133X");
+		cv.setArg0("13627267056");
+		cv.setArg1("637639");
+		cv.setAppointmentDate("2017-07-26");
+		cv.setAppointmentTime("09:00-12:00");
+		cv.setBookerName("");
+		cv.setBookerIdNumber("");
+		cv.setBookerType("");
+		cv.setArg2("");
+		cv.setArg3("");
+		cv.setArg4("");
+		cv.setArg5("");
+		BaseBean bean = iBookingBusinessService.createDriveinfo(cv);
+		System.out.println(bean);
+	}
 	@Test
 	public void getCarTypes() throws Exception {
 		List<CarTypeVO> carTypeVOs = iBookingBusinessService.getCarTypes();
@@ -41,6 +68,7 @@ public class BookingBusinessServiceTest extends TestCase {
 			System.out.println(businessTypeVO.getCode()+"---");
 		}
 		
+		System.out.println(businessTypeVOs);
 	}
 	
 	@Test
@@ -61,16 +89,16 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void getAppointmentDatethrows() throws Exception{
-		String orgId = "e4e48584399473d201399b0c4ad62b39";
-		String businessTypeId = "4028828239a4a4c60139a4fb36ef0007";
+		String orgId = "4028823f54bc6d150154c1600b1055dc";
+		String businessTypeId = "402882824747f258014754a501281430";
 		List<String> strings = iBookingBusinessService.getAppointmentDate(orgId, businessTypeId, "", "");
 		System.out.println(strings);
 	}
 	@Test
 	public void getAppTimes() throws Exception{
-		String orgId = "e4e48584399473d201399b0c4ad62b39";
-		String businessTypeId = "4028823f58dec36b0158e15befb4273b";
-		List<AppTimeHelper> appTimeHelpers = iBookingBusinessService.getAppTimes("2017-07-14", orgId, businessTypeId, "e4e48584399473d20139947fff4e2b2e", "");
+		String orgId = "4028823f54bc6d150154c1600b1055dc";
+		String businessTypeId = "402882824747f258014754a501281430";
+		List<AppTimeHelper> appTimeHelpers = iBookingBusinessService.getAppTimes("2017-07-18", orgId, businessTypeId, "", "");
 		System.out.println(appTimeHelpers);
 	}
 	
@@ -80,8 +108,8 @@ public class BookingBusinessServiceTest extends TestCase {
 	}
 	@Test
 	public void simpleSendMessage() throws Exception{
-		SmsInfoVO smsInfoVO = iBookingBusinessService.simpleSendMessage("17688758320", 
-				"0", "2", "", "0", "测试", "622822198502074112", "622822198502074112", "JDC");
+		SmsInfoVO smsInfoVO = iBookingBusinessService.simpleSendMessage("13627267056", 
+				"e4e48584399473d20139947f125e2b2c", "1", "", "0", "测试", "42138119910422133X", "42138119910422133X", "ZJ13");
 		System.out.println(smsInfoVO);
 	}
 	
@@ -116,12 +144,12 @@ public class BookingBusinessServiceTest extends TestCase {
 	}
 	@Test
 	public void cancel() throws Exception{
-		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "17071311121E", "18312518169");
+		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "17071417215H", "13627267056");
 		System.out.println(smsInfoVO);
 	}
 	@Test
 	public void getDriveInfo() throws Exception{
-		DriveInfoVO driveInfoVO = iBookingBusinessService.getDriveInfo("17071311121E", "622822198502074110", "", "");
+		DriveInfoVO driveInfoVO = iBookingBusinessService.getDriveInfo("17071417215H", "42138119910422133X", "", "");
 		System.out.println(driveInfoVO);
 	}
 	@Test

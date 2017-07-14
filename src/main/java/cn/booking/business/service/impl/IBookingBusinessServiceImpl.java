@@ -16,7 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
-
+import cn.booking.business.bean.CreateDriveinfoVo;
 import cn.booking.business.bean.CreateVehicleInfoVo;
 
 import cn.booking.business.bean.DriveInfoVO;
@@ -182,6 +182,10 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			if ("00".equals(code)) {
 				String data1=result.getString("com.rich.admin.entity.appointment.AppTimeHelper");
 				dateTime = JSON.parseArray(data1, AppTimeHelper.class);
+				String date1 = result.getString("com.rich.admin.entity.appointment.AppTimeHelper");
+				dateTime = JSON.parseArray(date1, AppTimeHelper.class);
+			} else {
+
 			}
 		} catch (Exception e) {
 			logger.error("getAppointmentDate 失败 ， map = " + map);
@@ -295,7 +299,49 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		}
 		return refBean;
 	}
+	
 
+	@Override
+	public BaseBean createDriveinfo(CreateDriveinfoVo createDriveinfoVo) throws Exception {
+		BaseBean refBean = new BaseBean();
+		logger.debug("【预约类服务】驾驶证预约信息写入createDriveinfo... 业务类型id=" + createDriveinfoVo.getBusinessTypeId());
+		
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("orgId", createDriveinfoVo.getOrgId());
+		map.put("businessTypeId", createDriveinfoVo.getBusinessTypeId());
+		map.put("name", createDriveinfoVo.getName());
+		map.put("idTypeId", createDriveinfoVo.getIdTypeId());
+		map.put("idNumber", createDriveinfoVo.getIdNumber());
+		map.put("mobile", createDriveinfoVo.getMobile());
+		map.put("appointmentDate", createDriveinfoVo.getAppointmentDate());
+		map.put("appointmentTime", createDriveinfoVo.getAppointmentTime());
+		map.put("bookerName", createDriveinfoVo.getBookerName());
+		map.put("bookerIdNumber", createDriveinfoVo.getBookerIdNumber());
+		map.put("bookerType", createDriveinfoVo.getBookerType());
+		map.put("arg0", createDriveinfoVo.getArg0());
+		map.put("arg1", createDriveinfoVo.getArg1());
+		map.put("arg2", createDriveinfoVo.getArg2());
+		map.put("arg3", createDriveinfoVo.getArg3());
+		map.put("arg4", createDriveinfoVo.getArg4());
+		map.put("arg5", createDriveinfoVo.getArg5());
+		JSONObject jsonObject = new JSONObject();
+		String method = "createDriveinfo";
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String code = jsonObject.getString("code");
+			String msg = jsonObject.getString("msg");
+			String result = jsonObject.getString("result");
+			refBean.setCode(jsonObject.getString("code"));
+			refBean.setMsg(jsonObject.getString("msg"));
+			refBean.setData(jsonObject.getString("result"));
+			logger.debug("【预约类服务】驾驶证预约信息写入结果:" + jsonObject);
+		} catch (Exception e) {
+			logger.error("【预约类服务】驾驶证预约信息写入异常 ， map = " + map);
+			throw e;
+		}
+		return refBean;
+	}
 	public SmsInfoVO cancel(String businessType, String bookNumber, String mobile) throws Exception {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("businessType", businessType);
@@ -373,4 +419,5 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		return vehicleInfoVO;
 
 	}
+
 }
