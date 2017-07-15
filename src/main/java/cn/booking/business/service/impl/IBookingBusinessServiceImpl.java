@@ -221,7 +221,21 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		return dateTime;
 	}
 
-	@Override
+	/**
+	 * 发送短信验证码 
+	 * Description TODO(发送短信验证码)
+	 * @param mobile 获取短信验证码的手机号
+	 * @param idType 本次预约所填写的证件种类ID,由于六年免检没有证件种类，请传”0”
+	 * @param lx 1:驾驶证业务  2:机动车业务（六年免检业务传3）  3:其他（包括六年免检业务）
+	 * @param ip 用户客户端IP
+	 * @param bookerType ‘0’非代办（或本人） ‘1’普通代办 ‘2’专业代办（企业代办）
+	 * @param bookerName 代办人姓名： 0’非代办（或本人）情况请传本次预约业务填写的姓名
+	 * @param bookerIdNumber 代办人身份证号码： 0’非代办（或本人）情况请传本次预约业务填写的证件号码
+	 * @param idNumber 本次预约业务填写的证件号码
+	 * @param codes 本次预约的具体业务类型（例如：JD01）
+	 * @return
+	 * @throws Exception
+	 */
 	public SmsInfoVO simpleSendMessage(String mobile, String idType, String lx, String ip, String bookerType,
 			String bookerName, String bookerIdNumber, String idNumber, String codes) throws Exception {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
@@ -364,9 +378,9 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("bookerNumber", bookerNumber);
 		map.put("idNumber", idNumber);
-		map.put("businessTypeId", businessTypeId);
-		map.put("organizationId", organizationId);
-		DriveInfoVO driveInfoVO = new DriveInfoVO();
+		map.put("businessTypeId",null ==  businessTypeId ? "" : businessTypeId);
+		map.put("organizationId", null == organizationId ? "" : organizationId);
+		DriveInfoVO driveInfoVO = null;
 		String method = "getDriveInfo";
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -374,13 +388,13 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
-			driveInfoVO.setCode(code);
-			driveInfoVO.setMsg(msg);
-			JSONObject result = jsonObject.getJSONObject("result");
-			if (result != null) {
-				String data = result.getString("DriveInfoVO");
-				driveInfoVO = JSON.parseObject(data, DriveInfoVO.class);
-				driveInfoVO.setCode(code);
+			if ("00".equals(code)) {
+				Object obj = jsonObject.get("result");
+				if(obj instanceof JSONObject){
+					JSONObject result = (JSONObject) obj;
+					String data = result.getString("DriveInfoVO");
+					driveInfoVO = JSON.parseObject(data, DriveInfoVO.class);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("getDriveInfo 失败 ， map = " + map);
