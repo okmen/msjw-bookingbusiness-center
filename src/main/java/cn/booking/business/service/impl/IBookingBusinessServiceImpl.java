@@ -366,7 +366,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		map.put("idNumber", idNumber);
 		map.put("businessTypeId", businessTypeId);
 		map.put("organizationId", organizationId);
-		DriveInfoVO driveInfoVO = null;
+		DriveInfoVO driveInfoVO = new DriveInfoVO();
 		String method = "getDriveInfo";
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -374,8 +374,14 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
-			String result = jsonObject.getString("result");
-			driveInfoVO = JSON.parseObject(JSON.toJSONString(jsonObject), DriveInfoVO.class);
+			driveInfoVO.setCode(code);
+			driveInfoVO.setMsg(msg);
+			JSONObject result = jsonObject.getJSONObject("result");
+			if (result != null) {
+				String data = result.getString("DriveInfoVO");
+				driveInfoVO = JSON.parseObject(data, DriveInfoVO.class);
+				driveInfoVO.setCode(code);
+			}
 		} catch (Exception e) {
 			logger.error("getDriveInfo 失败 ， map = " + map);
 			throw e;
