@@ -3,7 +3,6 @@ package cn.booking.business.service.impl;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +16,9 @@ import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.CreateDriveinfoVo;
+import cn.booking.business.bean.CreateTemporaryLicenseVehicleInfoVo;
 import cn.booking.business.bean.CreateVehicleInfoVo;
-
 import cn.booking.business.bean.DriveInfoVO;
-
 import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
@@ -28,7 +26,6 @@ import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.sdk.bean.BaseBean;
-import cn.sdk.util.StringUtil;
 import cn.sdk.webservice.WebServiceClient;
 
 @SuppressWarnings(value = "all")
@@ -329,9 +326,6 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
 			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
-			String code = jsonObject.getString("code");
-			String msg = jsonObject.getString("msg");
-			String result = jsonObject.getString("result");
 			refBean.setCode(jsonObject.getString("code"));
 			refBean.setMsg(jsonObject.getString("msg"));
 			refBean.setData(jsonObject.getString("result"));
@@ -419,5 +413,84 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		return vehicleInfoVO;
 
 	}
+	
+	/**
+	 * 核发临牌
+	 * @Description: TODO(核发临牌)
+	 * @param vo 核发临牌Vo
+	 * @return
+	 * @throws Exception
+	 */
+	public BaseBean createTemporaryLicenseVehicleInfo(CreateTemporaryLicenseVehicleInfoVo vo) throws Exception {
+		BaseBean baseBean = new BaseBean();
+		logger.debug("【预约类服务】核发临牌预约信息写入createTemporaryLicenseVehicleInfo... 业务类型ID = " + vo.getBusinessTypeId());
+
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		/*map.put("orgId", vo.getOrgId());  					//预约地点ID
+		map.put("businessTypeId", vo.getBusinessTypeId());  //业务类型ID
+		map.put("name", vo.getName());						//姓名
+		map.put("idTypeId", vo.getIdTypeId());				//证件种类ID
+		map.put("idNumber", vo.getIdNumber());				//证件号码
+		map.put("mobile", vo.getMobile());					//手机号码
+		map.put("adress", vo.getAdress());					//居住地址
+		map.put("appointmentDate", vo.getAppointmentDate());//预约日期
+		map.put("appointmentTime", vo.getAppointmentTime());//预约时间
+		map.put("carTypeId", vo.getCarTypeId());			//车辆类型ID
+		map.put("carFrame", vo.getCarFrame());				//车架号
+		map.put("platNumber", vo.getCarFrame());			//车牌号或车架号(机动车注册，核发临牌，机动车转移登记（市内过户），机动车变更登记（夫妻变更）这些业务由于没有车牌号码，就传车架号)
+		map.put("chineseBrand", vo.getChineseBrand());		//中文品牌
+		map.put("vehicleType", vo.getVehicleType());		//车辆型号
+		map.put("passengerNumber", vo.getPassengerNumber());//载客人数(请确保载客人数是数值的字符串：“整数值”)
+		map.put("engineNumber", vo.getEngineNumber());		//发动机号
+		map.put("bookerName", vo.getName());				//预约人*
+		map.put("bookerIdNumber", null==vo.getBookerIdNumber()?"":vo.getBookerIdNumber());	//预约人身份证号码*
+		map.put("bookerType",null==vo.getBookerType()?"":vo.getBookerType());				//预约方式*(‘0’本人)
+		map.put("rzjs", null==vo.getRzjs()?"":vo.getRzjs());    							//认证角色*(‘2’企业星级用户，其他，非企业星级用户)
+		map.put("arg0", vo.getArg0());						//手机号
+		map.put("arg1", vo.getArg1());						//短信验证码
+*/		
+		map.put("orgId", "e4e48584399473d20139947d9ee82b2a");  					//预约地点ID
+		map.put("businessTypeId", "402882824d2d900b014d3161b4d810db");  //业务类型ID
+		map.put("name", "测试");						//姓名
+		map.put("idTypeId", "");				//证件种类ID
+		map.put("idNumber", "");				//证件号码
+		map.put("mobile", "");					//手机号码
+		map.put("adress", "");					//居住地址
+		map.put("appointmentDate", "");//预约日期
+		map.put("appointmentTime", "");//预约时间
+		map.put("carTypeId", "");			//车辆类型ID
+		map.put("carFrame", "");				//车架号
+		map.put("platNumber", "");			//车牌号或车架号*(机动车注册，核发临牌，机动车转移登记（市内过户），机动车变更登记（夫妻变更）这些业务由于没有车牌号码，就传车架号)
+		map.put("chineseBrand", "");		//中文品牌
+		map.put("vehicleType", "");		//车辆型号
+		map.put("passengerNumber", "");//载客人数(请确保载客人数是数值的字符串：“整数值”)
+		map.put("engineNumber", "");		//发动机号
+		map.put("bookerName", "");			//预约人*
+		map.put("bookerIdNumber", "");	//预约人身份证号码*
+		map.put("bookerType", "");			//预约方式*(‘0’本人)
+		map.put("rzjs", "");    					//认证角色*(‘2’企业星级用户，其他，非企业星级用户)
+		map.put("arg0", "");						//手机号
+		map.put("arg1", "");						//短信验证码
+		
+		map.put("useCharater", "");		//使用性质*********************
+		
+		logger.debug("【预约类服务】核发临牌预约信息， map = " + map);
+		
+		//String method = "JK16";//车管所接口
+		String method = "createTemporaryLicenseVehicleInfo";//车管所接口
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			baseBean.setCode(jsonObject.getString("code"));
+			baseBean.setMsg(jsonObject.getString("msg"));
+			baseBean.setData(jsonObject.getString("result"));
+			logger.debug("【预约类服务】核发临牌预约信息写入结果:" + jsonObject);
+		} catch (Exception e) {
+			logger.error("【预约类服务】核发临牌预约信息写入异常 ， map = " + map);
+			throw e;
+		}
+		return baseBean;
+	}
+	
 
 }
