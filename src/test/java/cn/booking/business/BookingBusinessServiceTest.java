@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypeVO;
-import cn.booking.business.bean.CreateDriveinfoVo;
 import cn.booking.business.bean.CreateVehicleInfoVo;
 import cn.booking.business.bean.DriveInfoVO;
 import cn.booking.business.bean.OrgVO;
@@ -32,7 +31,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	 * 驾驶证预约
 	 * @throws Exception
 	 */
-	@Test
+	/*@Test
 	public void testcreateDrivveInfo() throws Exception{
 		CreateDriveinfoVo cv = new CreateDriveinfoVo();
 		cv.setOrgId("e4e48584399473d20139947d9ee82b2a");
@@ -50,7 +49,7 @@ public class BookingBusinessServiceTest extends TestCase {
 		cv.setBookerType("");
 		BaseBean bean = iBookingBusinessService.createDriveinfo(cv);
 		System.out.println(bean);
-	}
+	}*/
 	@Test
 	public void getCarTypes() throws Exception {
 		List<CarTypeVO> carTypeVOs = iBookingBusinessService.getCarTypes();
@@ -130,9 +129,9 @@ public class BookingBusinessServiceTest extends TestCase {
 		vo.setIndexType(""); 	//指标类型
 		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
 		vo.setUseCharater("123"); 	//使用性质
-		vo.setArg0("DH");  //车辆型号
-		vo.setArg1("17688758320"); 	//手机号码
-		vo.setArg2("464032");	 	//短信验证码
+		vo.setModelName("DH");  //车辆型号
+		vo.setBookerMobile("17688758320"); 	//手机号码
+		vo.setMsgNumber("464032");	 	//短信验证码
 		vo.setRzjs("11");
 		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
 		System.out.println(bean.toJson());
@@ -160,9 +159,9 @@ public class BookingBusinessServiceTest extends TestCase {
 		vo.setIndexType(""); 	//指标类型
 		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
 		vo.setUseCharater("123"); 	//使用性质
-		vo.setArg0("DH");  //车辆型号
-		vo.setArg1("17688758320"); 	//手机号码
-		vo.setArg2("862960");	 	//短信验证码
+		vo.setModelName("DH");  //车辆型号
+		vo.setBookerMobile("17688758320"); 	//手机号码
+		vo.setMsgNumber("464032");	 	//短信验证码
 		vo.setRzjs("");
 		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
 		System.out.println(bean.toJson());
@@ -190,9 +189,9 @@ public class BookingBusinessServiceTest extends TestCase {
 		vo.setIndexType(""); 	//指标类型
 		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
 		vo.setUseCharater("123"); 	//使用性质
-		vo.setArg0("DH");  //车辆型号
-		vo.setArg1("17688758320"); 	//手机号码
-		vo.setArg2("633868");	 	//短信验证码
+		vo.setModelName("DH");  //车辆型号
+		vo.setBookerMobile("17688758320"); 	//手机号码
+		vo.setMsgNumber("464032");	 	//短信验证码
 		vo.setRzjs("");
 		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
 		System.out.println(bean.toJson());
@@ -220,9 +219,9 @@ public class BookingBusinessServiceTest extends TestCase {
 		vo.setIndexType(""); 	//指标类型
 		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
 		vo.setUseCharater("123"); 	//使用性质
-		vo.setArg0("DH");  //车辆型号
-		vo.setArg1("17688758320"); 	//手机号码
-		vo.setArg2("533432");	 	//短信验证码
+		vo.setModelName("DH");  //车辆型号
+		vo.setBookerMobile("17688758320"); 	//手机号码
+		vo.setMsgNumber("464032");	 	//短信验证码
 		vo.setRzjs("");
 		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
 		System.out.println(bean.toJson());
@@ -250,9 +249,9 @@ public class BookingBusinessServiceTest extends TestCase {
 		vo.setIndexType(""); 	//指标类型
 		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
 		vo.setUseCharater("123"); 	//使用性质
-		vo.setArg0("DH");  //车辆型号
-		vo.setArg1("17688758320"); 	//手机号码
-		vo.setArg2("949439");	 	//短信验证码
+		vo.setModelName("DH");  //车辆型号
+		vo.setBookerMobile("17688758320"); 	//手机号码
+		vo.setMsgNumber("464032");	 	//短信验证码
 		vo.setRzjs("");
 		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
 		System.out.println(bean.toJson());
@@ -280,9 +279,9 @@ public class BookingBusinessServiceTest extends TestCase {
 		vo.setIndexType(""); 	//指标类型
 		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
 		vo.setUseCharater("123"); 	//使用性质
-		vo.setArg0("DH");  //车辆型号
-		vo.setArg1("17688758320"); 	//手机号码
-		vo.setArg2("924115");	 	//短信验证码
+		vo.setModelName("DH");  //车辆型号
+		vo.setBookerMobile("17688758320"); 	//手机号码
+		vo.setMsgNumber("464032");	 	//短信验证码
 		vo.setRzjs("");
 		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
 		System.out.println(bean.toJson());
