@@ -299,7 +299,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	}
 	@Test
 	public void getDriveInfo() throws Exception{
-		DriveInfoVO driveInfoVO = iBookingBusinessService.getDriveInfo("17071417215H", "42138119910422133X", "", "");
+		DriveInfoVO driveInfoVO = iBookingBusinessService.getDriveInfo("3aa071417215H", "42138119910422133X", "", "");
 		System.out.println(driveInfoVO);
 	}
 	@Test

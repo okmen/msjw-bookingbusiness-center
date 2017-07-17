@@ -26,6 +26,7 @@ import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.util.StringUtil;
 import cn.sdk.webservice.WebServiceClient;
 
 @SuppressWarnings(value = "all")
@@ -378,8 +379,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("bookerNumber", bookerNumber);
 		map.put("idNumber", idNumber);
-		map.put("businessTypeId",null ==  businessTypeId ? "" : businessTypeId);
-		map.put("organizationId", null == organizationId ? "" : organizationId);
+		map.put("businessTypeId", businessTypeId);
+		map.put("organizationId", organizationId);
 		DriveInfoVO driveInfoVO = null;
 		String method = "getDriveInfo";
 		JSONObject jsonObject = new JSONObject();
@@ -388,9 +389,11 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
+			driveInfoVO.setCode(code);
+			driveInfoVO.setMsg(msg);
+			Object obj = jsonObject.get("result");
 			if ("00".equals(code)) {
-				Object obj = jsonObject.get("result");
-				if(obj instanceof JSONObject){
+				if(obj instanceof JSONObject && null != obj){
 					JSONObject result = (JSONObject) obj;
 					String data = result.getString("DriveInfoVO");
 					driveInfoVO = JSON.parseObject(data, DriveInfoVO.class);
