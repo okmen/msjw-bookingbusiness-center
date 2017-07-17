@@ -114,7 +114,6 @@ public class BookingBusinessServiceTest extends TestCase {
 	}
 	
 	//换领机动车登记证书
-
 	public void testCreateVehicleInfo_JD06reateVehicleInfo_JD06() throws Exception{
 		CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
 		vo.setOrgId("e4e48584399473d201399b0c4ad62b39");  //预约地点Id
@@ -142,6 +141,157 @@ public class BookingBusinessServiceTest extends TestCase {
 		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
 		System.out.println(bean.toJson());
 	}
+	
+	//补换机动车号牌
+	@Test
+	public void testCreateVehicleInfo_JD02() throws Exception{
+		CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
+		vo.setOrgId("e4e48584399473d201399b0818122b37");  //预约地点Id
+		vo.setBusinessTypeId("e4e48584399473d201399483d85a2b31");  //业务类型id
+		vo.setName("测试"); //姓名
+		vo.setIdTypeId("e4e48584399473d20139947f125e2b2c");		//证件种类id
+		vo.setIdNumber("622822198502074113"); //证件号码
+		vo.setMobile("17688758320");	//手机号码
+		vo.setAppointmentDate("2017-07-24");  //预约日期
+		vo.setAppointmentTime("12:00-17:00");	//预约时间
+		vo.setCarTypeId("e4e48584399473d20139947fff4e2b2e"); 	//号牌种类  小型汽车（蓝色）
+		vo.setCarFrame("5563"); 	//车架号
+		vo.setPlatNumber("粤B6A42Q");   //车牌号或车架号
+		vo.setBookerName("测试");  //预约人姓名
+		vo.setBookerIdNumber("622822198502074113"); //预约人身份证号码
+		vo.setBookerType("0"); 	//预约方式
+		vo.setOptlittleCar(""); 	//车辆产地
+		vo.setIndexType(""); 	//指标类型
+		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
+		vo.setUseCharater("123"); 	//使用性质
+		vo.setArg0("DH");  //车辆型号
+		vo.setArg1("17688758320"); 	//手机号码
+		vo.setArg2("862960");	 	//短信验证码
+		vo.setRzjs("");
+		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
+		System.out.println(bean.toJson());
+	}
+	
+	//申领、补领机动车登记证书
+	@Test
+	public void testCreateVehicleInfo_JD13() throws Exception{
+		CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
+		vo.setOrgId("e4e48584399473d20139947d9ee82b2a");  //预约地点Id
+		vo.setBusinessTypeId("4028828244914e4401454fe33d2c3216");  //业务类型id
+		vo.setName("测试"); //姓名
+		vo.setIdTypeId("e4e48584399473d20139947f125e2b2c");		//证件种类id
+		vo.setIdNumber("622822198502074114"); //证件号码
+		vo.setMobile("17688758320");	//手机号码
+		vo.setAppointmentDate("2017-07-15");  //预约日期
+		vo.setAppointmentTime("09:00-12:00");	//预约时间
+		vo.setCarTypeId("e4e48584399473d20139947fff4e2b2e"); 	//号牌种类  小型汽车（蓝色）
+		vo.setCarFrame("5563"); 	//车架号
+		vo.setPlatNumber("粤B6A42Q");   //车牌号或车架号
+		vo.setBookerName("测试");  //预约人姓名
+		vo.setBookerIdNumber("622822198502074114"); //预约人身份证号码
+		vo.setBookerType("0"); 	//预约方式
+		vo.setOptlittleCar(""); 	//车辆产地
+		vo.setIndexType(""); 	//指标类型
+		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
+		vo.setUseCharater("123"); 	//使用性质
+		vo.setArg0("DH");  //车辆型号
+		vo.setArg1("17688758320"); 	//手机号码
+		vo.setArg2("633868");	 	//短信验证码
+		vo.setRzjs("");
+		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
+		System.out.println(bean.toJson());
+	}
+	
+	//补换领机动车行驶证
+	@Test
+	public void testCreateVehicleInfo_JD01() throws Exception{
+		CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
+		vo.setOrgId("e4e48584399473d201399b1173262b40");  //预约地点Id
+		vo.setBusinessTypeId("e4e48584399473d201399482cac32b30");  //业务类型id
+		vo.setName("测试"); //姓名
+		vo.setIdTypeId("e4e48584399473d20139947f125e2b2c");		//证件种类id
+		vo.setIdNumber("622822198502074114"); //证件号码
+		vo.setMobile("17688758320");	//手机号码
+		vo.setAppointmentDate("2017-07-15");  //预约日期
+		vo.setAppointmentTime("09:00-12:00");	//预约时间
+		vo.setCarTypeId("e4e48584399473d20139947fff4e2b2e"); 	//号牌种类  小型汽车（蓝色）
+		vo.setCarFrame("5563"); 	//车架号
+		vo.setPlatNumber("粤B6A42Q");   //车牌号或车架号
+		vo.setBookerName("测试");  //预约人姓名
+		vo.setBookerIdNumber("622822198502074114"); //预约人身份证号码
+		vo.setBookerType("0"); 	//预约方式
+		vo.setOptlittleCar(""); 	//车辆产地
+		vo.setIndexType(""); 	//指标类型
+		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
+		vo.setUseCharater("123"); 	//使用性质
+		vo.setArg0("DH");  //车辆型号
+		vo.setArg1("17688758320"); 	//手机号码
+		vo.setArg2("533432");	 	//短信验证码
+		vo.setRzjs("");
+		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
+		System.out.println(bean.toJson());
+	}
+	
+	//补换检验合格标志
+	@Test
+	public void testCreateVehicleInfo_JD30() throws Exception{
+		CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
+		vo.setOrgId("e4e48584399473d201399b0c4ad62b39");  //预约地点Id
+		vo.setBusinessTypeId("402882824700cd3301470fa98b3b03ce");  //业务类型id
+		vo.setName("测试"); //姓名
+		vo.setIdTypeId("e4e48584399473d20139947f125e2b2c");		//证件种类id
+		vo.setIdNumber("622822198502074115"); //证件号码
+		vo.setMobile("17688758320");	//手机号码
+		vo.setAppointmentDate("2017-07-15");  //预约日期
+		vo.setAppointmentTime("09:00-12:00");	//预约时间
+		vo.setCarTypeId("e4e48584399473d20139947fff4e2b2e"); 	//号牌种类  小型汽车（蓝色）
+		vo.setCarFrame("5563"); 	//车架号
+		vo.setPlatNumber("粤B6A42Q");   //车牌号或车架号
+		vo.setBookerName("测试");  //预约人姓名
+		vo.setBookerIdNumber("622822198502074115"); //预约人身份证号码
+		vo.setBookerType("0"); 	//预约方式
+		vo.setOptlittleCar(""); 	//车辆产地
+		vo.setIndexType(""); 	//指标类型
+		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
+		vo.setUseCharater("123"); 	//使用性质
+		vo.setArg0("DH");  //车辆型号
+		vo.setArg1("17688758320"); 	//手机号码
+		vo.setArg2("949439");	 	//短信验证码
+		vo.setRzjs("");
+		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
+		System.out.println(bean.toJson());
+	}
+	
+	//机动车变更登记（套牌车换证）
+	@Test
+	public void testCreateVehicleInfo_JD36() throws Exception{
+		CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
+		vo.setOrgId("e4e48584399473d20139947d9ee82b2a");  //预约地点Id
+		vo.setBusinessTypeId("4028823f4f73319c014f73518ad00199");  //业务类型id
+		vo.setName("测试"); //姓名
+		vo.setIdTypeId("e4e48584399473d20139947f125e2b2c");		//证件种类id
+		vo.setIdNumber("622822198502074116"); //证件号码
+		vo.setMobile("17688758320");	//手机号码
+		vo.setAppointmentDate("2017-07-15");  //预约日期
+		vo.setAppointmentTime("09:00-12:00");	//预约时间
+		vo.setCarTypeId("e4e48584399473d20139947fff4e2b2e"); 	//号牌种类  小型汽车（蓝色）
+		vo.setCarFrame("5563"); 	//车架号
+		vo.setPlatNumber("粤B6A42Q");   //车牌号或车架号
+		vo.setBookerName("测试");  //预约人姓名
+		vo.setBookerIdNumber("622822198502074116"); //预约人身份证号码
+		vo.setBookerType("0"); 	//预约方式
+		vo.setOptlittleCar(""); 	//车辆产地
+		vo.setIndexType(""); 	//指标类型
+		vo.setIndexNo(""); 		//指标号/公证号/车辆识别代号
+		vo.setUseCharater("123"); 	//使用性质
+		vo.setArg0("DH");  //车辆型号
+		vo.setArg1("17688758320"); 	//手机号码
+		vo.setArg2("924115");	 	//短信验证码
+		vo.setRzjs("");
+		BaseBean bean = iBookingBusinessService.createVehicleInfo(vo);
+		System.out.println(bean.toJson());
+	}
+	
 	@Test
 	public void cancel() throws Exception{
 		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "17071417215H", "13627267056");
