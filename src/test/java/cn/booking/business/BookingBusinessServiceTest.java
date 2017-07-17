@@ -41,17 +41,13 @@ public class BookingBusinessServiceTest extends TestCase {
 		cv.setIdTypeId("e4e48584399473d20139947f125e2b2c");
 		cv.setMobile("13627267056");
 		cv.setIdNumber("42138119910422133X");
-		cv.setArg0("13627267056");
-		cv.setArg1("637639");
+		cv.setBookerMobile("13627267056");
+		cv.setMsgNumber("637639");
 		cv.setAppointmentDate("2017-07-26");
 		cv.setAppointmentTime("09:00-12:00");
 		cv.setBookerName("");
 		cv.setBookerIdNumber("");
 		cv.setBookerType("");
-		cv.setArg2("");
-		cv.setArg3("");
-		cv.setArg4("");
-		cv.setArg5("");
 		BaseBean bean = iBookingBusinessService.createDriveinfo(cv);
 		System.out.println(bean);
 	}

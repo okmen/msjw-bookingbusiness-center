@@ -330,12 +330,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		map.put("bookerName", createDriveinfoVo.getBookerName());
 		map.put("bookerIdNumber", createDriveinfoVo.getBookerIdNumber());
 		map.put("bookerType", createDriveinfoVo.getBookerType());
-		map.put("arg0", createDriveinfoVo.getArg0());
-		map.put("arg1", createDriveinfoVo.getArg1());
-		map.put("arg2", createDriveinfoVo.getArg2());
-		map.put("arg3", createDriveinfoVo.getArg3());
-		map.put("arg4", createDriveinfoVo.getArg4());
-		map.put("arg5", createDriveinfoVo.getArg5());
+		map.put("arg0", createDriveinfoVo.getBookerMobile());
+		map.put("arg1", createDriveinfoVo.getMsgNumber());
 		JSONObject jsonObject = new JSONObject();
 		String method = "createDriveinfo";
 		try {
