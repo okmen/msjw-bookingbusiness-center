@@ -433,58 +433,63 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	public BaseBean createDriveinfo(CreateDriveinfoVo createDriveinfoVo) throws Exception {
 		BaseBean refBean = new BaseBean();
 		logger.debug("【预约类服务】驾驶证预约信息写入createDriveinfo... 业务类型id=" + createDriveinfoVo.getBusinessTypeId());
-		
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("orgId", createDriveinfoVo.getOrgId());
-		map.put("businessTypeId", createDriveinfoVo.getBusinessTypeId());
-		map.put("name", createDriveinfoVo.getName());
-		map.put("idTypeId", createDriveinfoVo.getIdTypeId());
-		map.put("idNumber", createDriveinfoVo.getIdNumber());
-		map.put("mobile", createDriveinfoVo.getMobile());
-		map.put("appointmentDate", createDriveinfoVo.getAppointmentDate());
-		map.put("appointmentTime", createDriveinfoVo.getAppointmentTime());
-		map.put("bookerName", createDriveinfoVo.getBookerName());
-		map.put("bookerIdNumber", createDriveinfoVo.getBookerIdNumber());
-		map.put("bookerType", createDriveinfoVo.getBookerType());
-		map.put("bookerMobile", createDriveinfoVo.getBookerMobile());
-		map.put("msgNumber", createDriveinfoVo.getMsgNumber());
-		map.put("arg2", createDriveinfoVo.getArg2());
-		map.put("arg3", createDriveinfoVo.getArg3());
-		map.put("arg4", createDriveinfoVo.getArg4());
-		map.put("arg5", createDriveinfoVo.getArg5());
-		logger.debug("【预约类服务】驾驶证预约信息, map = " + map);
+		StringBuffer sb = new StringBuffer();
+		sb.append("<root>")
+		.append("<orgId>").append(createDriveinfoVo.getOrgId()).append("</orgId>")	
+		.append("<businessTypeId>").append(createDriveinfoVo.getBusinessTypeId()).append("</businessTypeId>")	
+		.append("<name>").append(createDriveinfoVo.getName()).append("</name>")	
+		.append("<idTypeId>").append(createDriveinfoVo.getIdTypeId()).append("</idTypeId>")	
+		.append("<idNumber>").append(createDriveinfoVo.getIdNumber()).append("</idNumber>")	
+		.append("<mobile>").append(createDriveinfoVo.getMobile()).append("</mobile>")	
+		.append("<appointmentDate>").append(createDriveinfoVo.getAppointmentDate()).append("</appointmentDate>")	
+		.append("<appointmentTime>").append(createDriveinfoVo.getAppointmentTime()).append("</appointmentTime>")	
+		.append("<bookerName>").append(createDriveinfoVo.getBookerName()).append("</bookerName>")	
+		.append("<bookerIdNumber>").append(createDriveinfoVo.getBookerIdNumber()).append("</bookerIdNumber>")	
+		.append("<bookerType>").append(createDriveinfoVo.getBookerType()).append("</bookerType>")	
+		.append("<bookerMobile>").append(createDriveinfoVo.getBookerMobile()).append("</bookerMobile>")	
+		.append("<msgNumber>").append(createDriveinfoVo.getMsgNumber()).append("</msgNumber>")
+		.append("</root>");
+		logger.debug("【预约类服务】驾驶证预约信息, createDriveinfoVo = " + createDriveinfoVo);
 		JSONObject jsonObject = new JSONObject();
+		String jkId = "JK01";
 		String method = "createDriveinfo";
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, sb.toString(), account, password);
 			refBean.setCode(jsonObject.getString("code"));
 			refBean.setMsg(jsonObject.getString("msg"));
 			refBean.setData(jsonObject.getString("result"));
 			logger.debug("【预约类服务】驾驶证预约信息写入结果:" + jsonObject);
 		} catch (Exception e) {
-			logger.error("【预约类服务】驾驶证预约信息写入异常 ， map = " + map);
+			logger.error("【预约类服务】驾驶证预约信息写入异常 ， createDriveinfoVo = " + createDriveinfoVo);
 			throw e;
 		}
 		return refBean;
 	}
 	public SmsInfoVO cancel(String businessType, String bookNumber, String mobile) throws Exception {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("businessType", businessType);
-		map.put("bookNumber", bookNumber);
-		map.put("mobile", mobile);
+		StringBuffer sb = new StringBuffer();
+		sb.append("<root>")
+		.append("<businessType>").append(businessType).append("</businessType>")	
+		.append("<bookNumber>").append(bookNumber).append("</bookNumber>")	
+		.append("<mobile>").append(mobile).append("</mobile>")	
+		.append("</root>");
 		SmsInfoVO smsInfoVO = null;
 		String method = "cancel";
 		JSONObject jsonObject = new JSONObject();
+		String jkId = "JK11";
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, sb.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
-			String result = jsonObject.getString("result");
+            String  result = jsonObject.getString("result");
 			smsInfoVO = JSON.parseObject(JSON.toJSONString(jsonObject), SmsInfoVO.class);
 		} catch (Exception e) {
-			logger.error("cancel 失败 ， map = " + map);
+			logger.error("cancel 失败 ， businessType = " + businessType + "bookNumber = " + bookNumber + "mobile = " +mobile );
 			throw e;
 		}
 		return smsInfoVO;
@@ -493,17 +498,22 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Override
 	public DriveInfoVO getDriveInfo(String bookerNumber, String idNumber, String businessTypeId, String organizationId)
 			throws Exception {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("bookerNumber", bookerNumber);
-		map.put("idNumber", idNumber);
-		map.put("businessTypeId", businessTypeId);
-		map.put("organizationId", organizationId);
+		StringBuffer sb = new StringBuffer();
+		sb.append("<root>")
+		.append("<bookerNumber>").append(bookerNumber).append("</bookerNumber>")	
+		.append("<idNumber>").append(idNumber).append("</idNumber>")	
+		.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>")	
+		.append("<organizationId>").append(organizationId).append("</organizationId>")
+		.append("</root>");
 		DriveInfoVO driveInfoVO = null;
 		String method = "getDriveInfo";
 		JSONObject jsonObject = new JSONObject();
+		String jkId = "JK24";
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, sb.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			driveInfoVO.setCode(code);
@@ -517,7 +527,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("getDriveInfo 失败 ， map = " + map);
+			logger.error("getDriveInfo 失败 ， bookerNumber = " + bookerNumber +"idNumber = " + idNumber +"busissTypeId = " + businessTypeId + "organizationId = " + organizationId);
 			throw e;
 		}
 		return driveInfoVO;
