@@ -86,7 +86,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Override
 	public List<BusinessTypeVO> getBusinessTypes(String type, String part, String arg0, String arg1) throws Exception {
 		List<BusinessTypeVO> businessTypeVOs = null;
-		String method = "getBusinessTypes";
+		String jkId = "JK04";
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("type", type);
 		map.put("part", part);
@@ -95,7 +95,13 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			StringBuffer str=new StringBuffer();
+			str.append("<root><type>").append(type).append("</type>");
+			str.append("<part>").append(part).append("</part>").append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			JSONObject result = jsonObject.getJSONObject("result");
 			String BusinessTypeVO = result.getString("BusinessTypeVO");
 			System.out.println(BusinessTypeVO);
