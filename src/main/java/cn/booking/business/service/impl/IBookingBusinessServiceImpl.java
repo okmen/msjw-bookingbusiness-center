@@ -367,18 +367,11 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		map.put("bookerType", createDriveinfoVo.getBookerType());
 		map.put("bookerMobile", createDriveinfoVo.getBookerMobile());
 		map.put("msgNumber", createDriveinfoVo.getMsgNumber());
-<<<<<<< Updated upstream
 		map.put("arg2", createDriveinfoVo.getArg2());
 		map.put("arg3", createDriveinfoVo.getArg3());
 		map.put("arg4", createDriveinfoVo.getArg4());
 		map.put("arg5", createDriveinfoVo.getArg5());
 		logger.debug("【预约类服务】驾驶证预约信息, map = " + map);
-=======
-		map.put("arg2", "");
-		map.put("arg3", "");
-		map.put("arg4", "");
-		map.put("arg5", "");
->>>>>>> Stashed changes
 		JSONObject jsonObject = new JSONObject();
 		String method = "createDriveinfo";
 		try {
