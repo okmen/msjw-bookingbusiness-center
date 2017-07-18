@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.booking.business.dao.mapper.IdCardTypeMapper">
+	
+	<parameterMap type="cn.booking.business.bean.IdCardTypePo" id="parameterIdCardType" />
+	
+    <resultMap type="cn.booking.business.bean.IdCardTypePo" id="resultIdCardType">
+		<result property="id" column="id" />
+		<result property="idcardTypeId" column="idcard_type_id" />
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="createDate" column="create_date" />
+	</resultMap>
+
+	<sql id="common">
+		id,idcard_type_id,code,name,description,create_date
+	</sql>
+	
+	<insert id="addBatch" parameterMap="parameterIdCardType" useGeneratedKeys="true" keyProperty="id" >
+		insert into t_idcard_type(
+			idcard_type_id,code,name,description,create_date
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+        	(#{item.idcardTypeId}, #{item.code},#{item.name},#{item.description},#{item.createDate})
+        </foreach>
+	</insert>
+	
+	<!-- 查询所有-->
+	<select id="getAll" resultMap="resultIdCardType">
+		select <include refid="common" /> from t_idcard_type;
+	</select>
+	
+	<delete id="deleteAll">
+		delete from t_idcard_type;
+	</delete>
+	
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.booking.business.dao.mapper.IVehicleNodelMapper">
+	<parameterMap type="cn.booking.business.bean.VehicleNodelPo" id="parameteVehicleNodel" />
+    <resultMap type="cn.booking.business.bean.VehicleNodelPo" id="resultVehicleNodel">
+		<result property="id" column="id" />
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+		<result property="createDate" column="create_date" />
+	</resultMap>
+
+	<sql id="common">
+		code,name,create_date
+	</sql>
+	
+	<insert id="addBatch" parameterMap="parameteVehicleNodel" useGeneratedKeys="true" keyProperty="id" >
+		insert into t_use_nature(
+			code,name,create_date
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+        	(#{item.code},#{item.name},#{item.createDate})
+        </foreach>
+	</insert>
+	
+	<!-- 查询所有-->
+	<select id="getAll" resultMap="resultVehicleNodel">
+		select <include refid="common" /> from t_use_nature;
+	</select>
+	
+	<delete id="deleteAll">
+		delete from t_use_nature;
+	</delete>
+	
+</mapper>

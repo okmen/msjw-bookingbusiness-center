@@ -14,16 +14,24 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
+import cn.booking.business.bean.CarTypePo;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.CreateDriveinfoVo;
 import cn.booking.business.bean.CreateTemporaryLicenseVehicleInfoVo;
 import cn.booking.business.bean.CreateVehicleInfoVo;
 import cn.booking.business.bean.DriveInfoVO;
+import cn.booking.business.bean.IdCardTypePo;
 import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
+import cn.booking.business.bean.UseNaturePo;
 import cn.booking.business.bean.VehicleInfoVO;
+import cn.booking.business.bean.VehicleNodelPo;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
+import cn.booking.business.dao.ICarTypeDao;
+import cn.booking.business.dao.IIdCardTypeDao;
+import cn.booking.business.dao.IUseNatureDao;
+import cn.booking.business.dao.IVehicleNodelDao;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.util.MsgCode;
@@ -35,7 +43,19 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private IBookingBusinessCachedImpl iBookingBusinessCached;
-
+	@Autowired
+	private ICarTypeDao iCarTypeDao;
+	@Autowired
+	private IIdCardTypeDao idCardTypeDao;
+	@Autowired
+	private IUseNatureDao useNatureDao;
+	@Autowired
+	private IVehicleNodelDao iVehicleNodelDao;
+	@Autowired
+	private ICarTypeDao carTypeDao;
+	
+	
+	
 	/**
 	 * 获取车辆类型列表
 	 */
@@ -523,6 +543,65 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		}
 		return baseBean;
 	}
-	
 
+	@Override
+	public int addBatchCarType(List<CarTypePo> carTypePos) throws Exception {
+		return carTypeDao.addBatch(carTypePos);
+	}
+
+	@Override
+	public int addBatchIdCardType(List<IdCardTypePo> idCardTypePos) throws Exception {
+		return idCardTypeDao.addBatch(idCardTypePos);
+	}
+
+	@Override
+	public int addBatchUseNature(List<UseNaturePo> useNaturePos) throws Exception {
+		return useNatureDao.addBatch(useNaturePos);
+	}
+
+	@Override
+	public int addBatchVehicleNodel(List<VehicleNodelPo> vehicleNodelPos) throws Exception {
+		return iVehicleNodelDao.addBatch(vehicleNodelPos);
+	}
+
+	@Override
+	public int deleteAllCarType() throws Exception {
+		return carTypeDao.deleteAll();
+	}
+
+	@Override
+	public int deleteAllIdCardType() throws Exception {
+		return idCardTypeDao.deleteAll();
+	}
+
+	@Override
+	public int deleteAllUseNature() throws Exception {
+		return useNatureDao.deleteAll();
+	}
+
+	@Override
+	public int deleteAllVehicleNodel() throws Exception {
+		return iVehicleNodelDao.deleteAll();
+	}
+
+	@Override
+	public List<CarTypePo> getAllCarType() throws Exception {
+		return carTypeDao.getAll();
+	}
+
+	@Override
+	public List<IdCardTypePo> getAllIdCardType() throws Exception {
+		return idCardTypeDao.getAll();
+	}
+
+	@Override
+	public List<UseNaturePo> getAllUseNature() throws Exception {
+		return useNatureDao.getAll();
+	}
+
+	@Override
+	public List<VehicleNodelPo> getAllVehicleNodel() throws Exception {
+		return iVehicleNodelDao.getAll();
+	}
+	
 }

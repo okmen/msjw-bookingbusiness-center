@@ -1,5 +1,7 @@
 package cn.booking.business;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -11,12 +13,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
+import cn.booking.business.bean.CarTypePo;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.CreateVehicleInfoVo;
 import cn.booking.business.bean.DriveInfoVO;
+import cn.booking.business.bean.IdCardTypePo;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
+import cn.booking.business.bean.UseNaturePo;
 import cn.booking.business.bean.VehicleInfoVO;
+import cn.booking.business.bean.VehicleNodelPo;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.sdk.bean.BaseBean;
 import junit.framework.TestCase;
@@ -27,6 +33,176 @@ public class BookingBusinessServiceTest extends TestCase {
 	@Autowired
     @Qualifier("bookingBusinessService")
     private IBookingBusinessService iBookingBusinessService;
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void addBatchCarType() throws Exception{
+		List<CarTypePo> carTypePos = new ArrayList<CarTypePo>();
+		CarTypePo carTypePo1 = new CarTypePo();
+		carTypePo1.setCarTypeId("111");
+		carTypePo1.setCode("222");
+		carTypePo1.setCreateDate(new Date());
+		carTypePo1.setDescription("33333333");
+		carTypePo1.setName("444444");
+		
+		CarTypePo carTypePo2 = new CarTypePo();
+		carTypePo2.setCarTypeId("111");
+		carTypePo2.setCode("222");
+		carTypePo2.setCreateDate(new Date());
+		carTypePo2.setDescription("33333333");
+		carTypePo2.setName("444444");
+		carTypePos.add(carTypePo1);
+		carTypePos.add(carTypePo2);
+		iBookingBusinessService.addBatchCarType(carTypePos);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void getAllCarType() throws Exception{
+		List<CarTypePo> carTypePos = iBookingBusinessService.getAllCarType();
+		System.out.println(carTypePos);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void deleteAllCarType() throws Exception{
+		int result = iBookingBusinessService.deleteAllCarType();
+		System.out.println(result);
+	}
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void addBatchIdCardType() throws Exception{
+		List<IdCardTypePo> idCardTypePos = new ArrayList<IdCardTypePo>();
+		IdCardTypePo idCardTypePo1 = new IdCardTypePo();
+		idCardTypePo1.setIdcardTypeId("33333333333");
+		idCardTypePo1.setCode("222");
+		idCardTypePo1.setCreateDate(new Date());
+		idCardTypePo1.setDescription("33333333");
+		idCardTypePo1.setName("444444");
+		
+		IdCardTypePo idCardTypePo2 = new IdCardTypePo();
+		idCardTypePo2.setIdcardTypeId("333333333331111");
+		idCardTypePo2.setCode("222111111");
+		idCardTypePo2.setCreateDate(new Date());
+		idCardTypePo2.setDescription("333333331111");
+		idCardTypePo2.setName("4444441111");
+		idCardTypePos.add(idCardTypePo1);
+		idCardTypePos.add(idCardTypePo2);
+		
+		iBookingBusinessService.addBatchIdCardType(idCardTypePos);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void getAllIdCardType() throws Exception{
+		List<CarTypePo> carTypePos = iBookingBusinessService.getAllCarType();
+		System.out.println(carTypePos);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void deleteAllIdCardType() throws Exception{
+		int result = iBookingBusinessService.deleteAllCarType();
+		System.out.println(result);
+	}
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void addBatchUseNature() throws Exception{
+		List<UseNaturePo> useNaturePos = new ArrayList<UseNaturePo>();
+		UseNaturePo useNaturePo1 = new UseNaturePo();
+		useNaturePo1.setCode("1111111111");
+		useNaturePo1.setCreateDate(new Date());
+		useNaturePo1.setId(22l);
+		useNaturePo1.setName("333333333333");
+		
+		UseNaturePo useNaturePo2 = new UseNaturePo();
+		useNaturePo1.setCode("222222222");
+		useNaturePo1.setCreateDate(new Date());
+		useNaturePo1.setId(33l);
+		useNaturePo1.setName("44444444");
+		useNaturePos.add(useNaturePo1);
+		useNaturePos.add(useNaturePo2);
+		iBookingBusinessService.addBatchUseNature(useNaturePos);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void getAllUseNature() throws Exception{
+		List<CarTypePo> carTypePos = iBookingBusinessService.getAllCarType();
+		System.out.println(carTypePos);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void deleteAllUseNature() throws Exception{
+		int result = iBookingBusinessService.deleteAllUseNature();
+		System.out.println(result);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void addBatchVehicleNodel() throws Exception{
+		List<VehicleNodelPo> vehicleNodelPos = new ArrayList<VehicleNodelPo>();
+		VehicleNodelPo vehicleNodelPo1 = new VehicleNodelPo();
+		vehicleNodelPo1.setCode("11111111111");
+		vehicleNodelPo1.setCreateDate(new Date()); 
+		vehicleNodelPo1.setId(11L);
+		vehicleNodelPo1.setName("2222222222222");
+		
+		VehicleNodelPo vehicleNodelPo2 = new VehicleNodelPo();
+		vehicleNodelPo2.setCode("11111111111");
+		vehicleNodelPo2.setCreateDate(new Date()); 
+		vehicleNodelPo2.setId(11L);
+		vehicleNodelPo2.setName("2222222222222");
+		vehicleNodelPos.add(vehicleNodelPo1);
+		vehicleNodelPos.add(vehicleNodelPo2);
+		iBookingBusinessService.addBatchVehicleNodel(vehicleNodelPos);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void getAllVehicleNodel() throws Exception{
+		List<VehicleNodelPo> vehicleNodelPos = iBookingBusinessService.getAllVehicleNodel();
+		System.out.println(vehicleNodelPos);
+	}
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void deleteAllVehicleNodel() throws Exception{
+		int result = iBookingBusinessService.deleteAllVehicleNodel();
+		System.out.println(result);
+	}
+	
+	
 	/**
 	 * 驾驶证预约
 	 * @throws Exception

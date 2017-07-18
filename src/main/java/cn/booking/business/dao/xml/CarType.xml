@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.booking.business.dao.mapper.CarTypeMapper">
+	
+	<parameterMap type="cn.booking.business.bean.CarTypePo" id="parameterCarType" />
+    <resultMap type="cn.booking.business.bean.CarTypePo" id="resultCarType">
+		<result property="id" column="id" />
+		<result property="carTypeId" column="car_type_id" />
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="createDate" column="create_date" />
+	</resultMap>
+
+	<sql id="common">
+		id,car_type_id,code,name,description,create_date
+	</sql>
+	
+	<insert id="addBatch" parameterMap="parameterCarType" useGeneratedKeys="true" keyProperty="id" >
+		insert into t_car_type (
+			car_type_id,code,name,description,create_date
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+            (#{item.carTypeId}, #{item.code},#{item.name},#{item.description},#{item.createDate})
+        </foreach>
+	</insert>
+	
+	<!-- 查询所有-->
+	<select id="getAll" resultMap="resultCarType">
+		select <include refid="common" /> from t_car_type;
+	</select>
+	
+	<delete id="deleteAll">
+		delete from t_car_type;
+	</delete>
+	
+</mapper>
