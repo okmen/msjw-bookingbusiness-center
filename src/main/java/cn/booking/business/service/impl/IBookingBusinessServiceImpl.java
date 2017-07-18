@@ -300,12 +300,12 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		map.put("bookerName", vehicleInfoVo.getBookerName()); // 预约人姓名
 		map.put("bookerIdNumber", vehicleInfoVo.getBookerIdNumber()); // 预约人身份证号码
 		map.put("bookerType", vehicleInfoVo.getBookerType()); // 预约方式
-		map.put("rzjs", vehicleInfoVo.getRzjs()); // 认证角色
-		map.put("optlittleCar", vehicleInfoVo.getOptlittleCar()); // 车辆产地
-		map.put("indexType ", vehicleInfoVo.getIndexType()); // 指标类型
-		map.put("indexNo ", vehicleInfoVo.getIndexNo()); // 指标号/公证号/车辆识别代号
-		map.put("useCharater", vehicleInfoVo.getUseCharater()); // 使用性质
-		map.put("modelName", vehicleInfoVo.getModelName()); // 车辆型号
+		map.put("rzjs",null == vehicleInfoVo.getRzjs() ? "" : vehicleInfoVo.getRzjs()); // 认证角色
+		map.put("optlittleCar",null == vehicleInfoVo.getOptlittleCar() ? "" : vehicleInfoVo.getOptlittleCar()); // 车辆产地
+		map.put("indexType ",null == vehicleInfoVo.getIndexType() ? "" : vehicleInfoVo.getIndexType()); // 指标类型
+		map.put("indexNo ", null == vehicleInfoVo.getIndexNo() ? "" : vehicleInfoVo.getIndexNo()); // 指标号/公证号/车辆识别代号
+		map.put("useCharater", null == vehicleInfoVo.getUseCharater() ? "" : vehicleInfoVo.getUseCharater()); // 使用性质
+		map.put("modelName",  null == vehicleInfoVo.getModelName() ? "" : vehicleInfoVo.getModelName()); // 车辆型号
 		map.put("bookerMobile", vehicleInfoVo.getBookerMobile()); // 手机号码
 		map.put("msgNumber", vehicleInfoVo.getMsgNumber()); // 短信验证码
 		JSONObject jsonObject = new JSONObject();
