@@ -204,11 +204,21 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		map.put("carTypeId", carTypeId);
 		map.put("optlittleCar", null == optlittleCar ? "" : optlittleCar);
 		List<AppTimeHelper> dateTime = new ArrayList<AppTimeHelper>();
-		String method = "getAppTimes";
+		String jkId = "JK10";
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			StringBuffer str=new StringBuffer("<root>");
+			str.append("<date>").append(date).append("</date>");
+			str.append("<orgId>").append(orgId).append("</orgId>");
+			str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>");
+			str.append("<carTypeId>").append(carTypeId).append("</carTypeId>");
+			str.append("<optlittleCar>").append(optlittleCar).append("</optlittleCar>");
+			str.append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
@@ -245,11 +255,17 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		map.put("arg0", null == arg0 ? "" : arg0);
 		map.put("arg1", null == arg1 ? "" : arg1);
 		List<String> dateTime = new ArrayList<String>();
-		String method = "getAppointmentDate";
+		String jkId = "JK09";
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			StringBuffer str=new StringBuffer();
+			str.append("<root><orgId>").append(orgId).append("</orgId>");
+			str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>").append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
@@ -295,11 +311,25 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		map.put("codes", codes);
 		logger.debug("发送短信验证码, map = " + map);
 		SmsInfoVO smsInfoVO = null;
-		String method = "simpleSendMessage";
+		String jkId = "JK26";
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			StringBuffer str=new StringBuffer("<root>");
+			str.append("<mobile>").append(mobile).append("</mobile>");
+			str.append("<idTypeId>").append(idType).append("</idTypeId>");
+			str.append("<lx>").append(lx).append("</lx>");
+			str.append("<ip>").append(ip).append("</ip>");
+			str.append("<bookerType>").append(bookerType).append("</bookerType>");
+			str.append("<bookerName>").append(bookerName).append("</bookerName>");
+			str.append("<bookerIdNumber>").append(bookerIdNumber).append("</bookerIdNumber>");
+			str.append("<idNumber>").append(idNumber).append("</idNumber>");
+			str.append("<codes>").append(codes).append("</codes>");
+			str.append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			String result = jsonObject.getString("result");
@@ -339,16 +369,43 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		map.put("bookerMobile", vehicleInfoVo.getBookerMobile()); // 手机号码
 		map.put("msgNumber", vehicleInfoVo.getMsgNumber()); // 短信验证码
 		JSONObject jsonObject = new JSONObject();
-		String method = "newCreateVehicleInfo";
+		String jkId = "JK03";
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			StringBuffer str=new StringBuffer("<root>");
+			str.append("<orgId>").append(vehicleInfoVo.getOrgId()).append("</orgId>");
+			str.append("<businessTypeId>").append(vehicleInfoVo.getBusinessTypeId()).append("</businessTypeId>");
+			str.append("<name>").append(vehicleInfoVo.getName()).append("</name>");
+			str.append("<idTypeId>").append(vehicleInfoVo.getIdTypeId()).append("</idTypeId>");
+			str.append("<idNumber>").append(vehicleInfoVo.getIdNumber()).append("</idNumber>");
+			str.append("<mobile>").append(vehicleInfoVo.getMobile()).append("</mobile>");
+			str.append("<appointmentDate>").append(vehicleInfoVo.getAppointmentDate()).append("</appointmentDate>");
+			str.append("<appointmentTime>").append(vehicleInfoVo.getAppointmentTime()).append("</appointmentTime>");
+			str.append("<carTypeId>").append(vehicleInfoVo.getCarTypeId()).append("</carTypeId>");
+			str.append("<carFrame>").append(vehicleInfoVo.getCarFrame()).append("</carFrame>");
+			str.append("<platNumber>").append(vehicleInfoVo.getPlatNumber()).append("</platNumber>");
+			str.append("<bookerName>").append(vehicleInfoVo.getBookerName()).append("</bookerName>");
+			str.append("<bookerIdNumber>").append(vehicleInfoVo.getBookerIdNumber()).append("</bookerIdNumber>");
+			str.append("<bookerType>").append(vehicleInfoVo.getBookerType()).append("</bookerType>");
+			str.append("<rzjs>").append(vehicleInfoVo.getRzjs()).append("</rzjs>");
+			str.append("<optlittleCar>").append(vehicleInfoVo.getOptlittleCar()).append("</optlittleCar>");
+			str.append("<indexType>").append(vehicleInfoVo.getIndexType()).append("</indexType>");
+			str.append("<indexNo>").append(vehicleInfoVo.getIndexNo()).append("</indexNo>");
+			str.append("<useCharater>").append(vehicleInfoVo.getUseCharater()).append("</useCharater>");
+			str.append("<modelName>").append(vehicleInfoVo.getModelName()).append("</modelName>");
+			str.append("<bookerMobile>").append(vehicleInfoVo.getBookerMobile()).append("</bookerMobile>");
+			str.append("<msgNumber>").append(vehicleInfoVo.getMsgNumber()).append("</msgNumber>");
+			str.append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			String result = jsonObject.getString("result");
-			refBean.setCode(jsonObject.getString("code"));
-			refBean.setMsg(jsonObject.getString("msg"));
-			refBean.setData(jsonObject.getString("result"));
+			refBean.setCode(code);
+			refBean.setMsg(msg);
+			refBean.setData(result);
 			logger.debug("【预约类服务】机动车预约信息写入结果:" + jsonObject);
 		} catch (Exception e) {
 			logger.error("【预约类服务】机动车预约信息写入异常 ， map = " + map);

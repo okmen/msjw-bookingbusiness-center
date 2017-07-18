@@ -283,7 +283,7 @@ public class BookingBusinessServiceTest extends TestCase {
 				"e4e48584399473d20139947f125e2b2c", "1", "", "0", "测试", "42138119910422133X", "42138119910422133X", "ZJ13");
 		System.out.println(smsInfoVO);
 	}
-	
+	@Test
 	//换领机动车登记证书
 	public void testCreateVehicleInfo_JD06reateVehicleInfo_JD06() throws Exception{
 		CreateVehicleInfoVo vo = new CreateVehicleInfoVo();
