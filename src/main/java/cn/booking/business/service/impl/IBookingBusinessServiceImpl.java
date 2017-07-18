@@ -97,14 +97,12 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			String url = iBookingBusinessCached.getStcUrl();
 			String account = iBookingBusinessCached.getCgsaccount();
 			String password = iBookingBusinessCached.getCgspassword();
-			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			StringBuffer str=new StringBuffer();
 			str.append("<root><type>").append(type).append("</type>");
 			str.append("<part>").append(part).append("</part>").append("</root>");
 			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			JSONObject result = jsonObject.getJSONObject("result");
 			String BusinessTypeVO = result.getString("BusinessTypeVO");
-			System.out.println(BusinessTypeVO);
 			businessTypeVOs = JSON.parseArray(BusinessTypeVO, BusinessTypeVO.class);
 		} catch (Exception e) {
 			logger.error("getBusinessTypes 失败 ， map = " + map);
@@ -115,8 +113,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 	@Override
 	public List<IdTypeVO> getIdTypes(String businessTypeId, String arg0, String arg1) throws Exception {
+		String jkId = "JK06";
 		List<IdTypeVO> idTypeVos = null;
-		String method = "getIdTypes";
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("businessTypeId", businessTypeId);
 		map.put("arg0", null == arg0 ? "" : arg0);
@@ -124,7 +122,13 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			StringBuffer str=new StringBuffer();
+			str.append("<root>");
+			str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>");
+			str.append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			JSONObject result = jsonObject.getJSONObject("result");
 			String IdTypeVO = result.getString("IdTypeVO");
 			idTypeVos = JSON.parseArray(IdTypeVO, IdTypeVO.class);
@@ -137,15 +141,20 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 	@Override
 	public OrgVO findOrgByOrgId(String orgId) throws Exception {
+		String jkId = "JK08";
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("orgId", orgId);
 		OrgVO orgVO = new OrgVO();
-		String method = "findOrgByOrgId";
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
-
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			StringBuffer str=new StringBuffer();
+			str.append("<root>");
+			str.append("<orgId>").append(orgId).append("</orgId>");
+			str.append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			String result = jsonObject.getString("result");
@@ -165,16 +174,22 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 	@Override
 	public List<OrgVO> getOrgsByBusinessTypeId(String btId, String arg0, String arg1) throws Exception {
+		String jkId = "JK05";
 		List<OrgVO> orgVOs = new ArrayList<OrgVO>();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("btId", btId);
 		map.put("arg0", null == arg0 ? "" : arg0);
 		map.put("arg1", null == arg1 ? "" : arg1);
-		String method = "getOrgsByBusinessTypeId";
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			StringBuffer str=new StringBuffer();
+			str.append("<root>");
+			str.append("<btId>").append(btId).append("</btId>");
+			str.append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			JSONObject result = jsonObject.getJSONObject("result");
@@ -185,7 +200,6 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				OrgVO vo=JSON.parseObject(OrgVO, OrgVO.class);
 				orgVOs.add(vo);
 			}
-
 		} catch (Exception e) {
 			logger.error("getOrgsByBusinessTypeId 失败 ， btId = " + btId + ", arg0=" + arg0 + ",arg1=" + arg1);
 			throw e;
