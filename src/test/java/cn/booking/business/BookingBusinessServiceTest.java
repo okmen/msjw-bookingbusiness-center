@@ -93,8 +93,8 @@ public class BookingBusinessServiceTest extends TestCase {
 	public void getAppTimes() throws Exception{
 		String orgId = "4028823f54bc6d150154c1600b1055dc";
 		String businessTypeId = "402882824747f258014754a501281430";
-		List<AppTimeHelper> appTimeHelpers = iBookingBusinessService.getAppTimes("2017-07-18", orgId, businessTypeId, "", "");
-		System.out.println(appTimeHelpers);
+		BaseBean bean = iBookingBusinessService.getAppTimes("2017-07-18", orgId, businessTypeId, "", "");
+		System.out.println(bean.getData());
 	}
 	
 	@Test

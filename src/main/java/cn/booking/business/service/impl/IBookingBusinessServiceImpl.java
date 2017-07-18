@@ -135,7 +135,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 	@Override
 	public List<OrgVO> getOrgsByBusinessTypeId(String btId, String arg0, String arg1) throws Exception {
-		List<OrgVO> orgVOs = null;
+		List<OrgVO> orgVOs = new ArrayList<OrgVO>();
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("btId", btId);
 		map.put("arg0", null == arg0 ? "" : arg0);
@@ -149,7 +149,12 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			String msg = jsonObject.getString("msg");
 			JSONObject result = jsonObject.getJSONObject("result");
 			String OrgVO = result.getString("OrgVO");
+			try{
 			orgVOs = JSON.parseArray(OrgVO, OrgVO.class);
+			}catch (Exception e) {
+				OrgVO vo=JSON.parseObject(OrgVO, OrgVO.class);
+				orgVOs.add(vo);
+			}
 
 		} catch (Exception e) {
 			logger.error("getOrgsByBusinessTypeId 失败 ， btId = " + btId + ", arg0=" + arg0 + ",arg1=" + arg1);
@@ -159,14 +164,15 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	}
 
 	@Override
-	public List<AppTimeHelper> getAppTimes(String date, String orgId, String businessTypeId, String carTypeId,
+	public BaseBean getAppTimes(String date, String orgId, String businessTypeId, String carTypeId,
 			String optlittleCar) throws Exception {
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		BaseBean bean=new BaseBean();
 		map.put("date", date);
 		map.put("orgId", orgId);
 		map.put("businessTypeId", businessTypeId);
 		map.put("carTypeId", carTypeId);
-		map.put("optlittleCar", optlittleCar);
+		map.put("optlittleCar", null == optlittleCar ? "" : optlittleCar);
 		List<AppTimeHelper> dateTime = new ArrayList<AppTimeHelper>();
 		String method = "getAppTimes";
 		JSONObject jsonObject = new JSONObject();
@@ -176,20 +182,28 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
-			JSONObject result = jsonObject.getJSONObject("result");
-			if ("00".equals(code)) {
-				String data1=result.getString("com.rich.admin.entity.appointment.AppTimeHelper");
-				dateTime = JSON.parseArray(data1, AppTimeHelper.class);
-				String date1 = result.getString("com.rich.admin.entity.appointment.AppTimeHelper");
-				dateTime = JSON.parseArray(date1, AppTimeHelper.class);
-			} else {
-
+			try{
+				JSONObject result = jsonObject.getJSONObject("result");
+				if ("00".equals(code)) {
+					String data1=result.getString("com.rich.admin.entity.appointment.AppTimeHelper");
+					dateTime = JSON.parseArray(data1, AppTimeHelper.class);
+					String date1 = result.getString("com.rich.admin.entity.appointment.AppTimeHelper");
+					dateTime = JSON.parseArray(date1, AppTimeHelper.class);
+					bean.setData(dateTime);
+					
+				} 
+			}catch (Exception e) {
+				String result = jsonObject.getString("result");
+				bean.setData(result);
+				logger.error("获取预约时间错误："+result);	
 			}
+			bean.setCode(code);
+			bean.setMsg(msg);
 		} catch (Exception e) {
 			logger.error("getAppointmentDate 失败 ， map = " + map);
 			throw e;
 		}
-		return dateTime;
+		return bean;
 	}
 
 	@Override
