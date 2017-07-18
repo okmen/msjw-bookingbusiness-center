@@ -468,7 +468,7 @@ public class BookingBusinessServiceTest extends TestCase {
 		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "17071417215H", "13627267056");
 		System.out.println(smsInfoVO);
 	}
-	@Test
+	/*@Test
 	public void getDriveInfo() throws Exception{
 		DriveInfoVO driveInfoVO = iBookingBusinessService.getDriveInfo("3aa071417215H", "42138119910422133X", "", "");
 		System.out.println(driveInfoVO);
@@ -478,5 +478,5 @@ public class BookingBusinessServiceTest extends TestCase {
 		VehicleInfoVO vehicleInfoVO = iBookingBusinessService.getVehicleInfo("17071311121E", "622822198502074110", "", "","");
 		System.out.println(vehicleInfoVO);
 
-	}
+	}*/
 }

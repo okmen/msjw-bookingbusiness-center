@@ -494,73 +494,115 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		}
 		return smsInfoVO;
 	}
-
-	@Override
-	public DriveInfoVO getDriveInfo(String bookerNumber, String idNumber, String businessTypeId, String organizationId)
+	
+	/**
+	 * 获取驾驶证预约信息
+	 * @Description: TODO(获取驾驶证预约信息)
+	 * @param bookerNumber 预约号  必填
+	 * @param idNumber 证件号码  必填
+	 * @param businessTypeId 业务类型ID
+	 * @param organizationId 预约单位ID
+	 * @return
+	 * @throws Exception
+	 */
+	public BaseBean getDriveInfo(String bookerNumber, String idNumber, String businessTypeId, String organizationId)
 			throws Exception {
+		logger.debug("【预约类服务】获取驾驶证预约信息getDriveInfo...");
+		BaseBean baseBean = new BaseBean();
+		String jkId = "JK24";	//接口编号
 		StringBuffer sb = new StringBuffer();
-		sb.append("<root>")
-		.append("<bookerNumber>").append(bookerNumber).append("</bookerNumber>")	
-		.append("<idNumber>").append(idNumber).append("</idNumber>")	
-		.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>")	
-		.append("<organizationId>").append(organizationId).append("</organizationId>")
-		.append("</root>");
-		DriveInfoVO driveInfoVO = null;
-		String method = "getDriveInfo";
-		JSONObject jsonObject = new JSONObject();
-		String jkId = "JK24";
 		try {
+			sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?><root>")
+			.append("<bookNumber>").append(bookerNumber).append("</bookNumber>")				//预约人
+			.append("<idNumber>").append(idNumber).append("</idNumber>")						//证件号码
+			.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>")		//业务类型ID*
+			.append("<organizationId>").append(organizationId).append("</organizationId>")		//预约单位ID*
+			.append("</root>");
+			String data = sb.toString();
 			String url = iBookingBusinessCached.getStcUrl();
 			String account = iBookingBusinessCached.getCgsaccount();
 			String password = iBookingBusinessCached.getCgspassword();
-			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, sb.toString(), account, password);
+			logger.debug("【预约类服务】获取驾驶证预约信息请求报文xml， data = " + data);
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
-			driveInfoVO.setCode(code);
-			driveInfoVO.setMsg(msg);
 			Object obj = jsonObject.get("result");
 			if ("00".equals(code)) {
-				if(obj instanceof JSONObject && null != obj){
+				if(obj instanceof JSONObject && obj != null){
 					JSONObject result = (JSONObject) obj;
-					String data = result.getString("DriveInfoVO");
-					driveInfoVO = JSON.parseObject(data, DriveInfoVO.class);
+					baseBean.setCode(MsgCode.success);
+					baseBean.setData(JSON.parseObject(result.getString("DriveInfoVO"), DriveInfoVO.class));
+				}else{
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("未查询到记录");
 				}
+			}else {
+				baseBean.setCode(code);
+				baseBean.setMsg(msg);
 			}
 		} catch (Exception e) {
-			logger.error("getDriveInfo 失败 ， bookerNumber = " + bookerNumber +"idNumber = " + idNumber +"busissTypeId = " + businessTypeId + "organizationId = " + organizationId);
+			logger.error("【预约类服务】获取驾驶证预约信息异常， sb = " + sb.toString());
 			throw e;
 		}
-		return driveInfoVO;
+		return baseBean;
 	}
 
-	@Override
-	public VehicleInfoVO getVehicleInfo(String bookerNumber, String idNumber, String platNumber, String businessTypeId,
+	/**
+	 * 获取机动车预约信息
+	 * @Description: TODO(获取机动车预约信息)
+	 * @param bookerNumber 预约号  必填
+	 * @param idNumber 证件号码  必填
+	 * @param platNumber 车牌号
+	 * @param businessTypeId 业务类型ID
+	 * @param organizationId 预约单位ID
+	 * @return
+	 * @throws Exception
+	 */
+	public BaseBean getVehicleInfo(String bookerNumber, String idNumber, String platNumber, String businessTypeId,
 			String organizationId) throws Exception {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("bookerNumber", bookerNumber);
-		map.put("idNumber", idNumber);
-		map.put("platNumber", null == platNumber ? "" : platNumber);
-		map.put("businessTypeId", null == businessTypeId ? "" : businessTypeId);
-		map.put("organizationId", null == organizationId ? "" : organizationId);
-		VehicleInfoVO vehicleInfoVO = null;
-		String method = "getVehicleInfo";
+		logger.debug("【预约类服务】获取机动车预约信息getVehicleInfo...");
+		BaseBean baseBean = new BaseBean();
+		String jkId = "JK23";	//接口编号
 
-		JSONObject jsonObject = new JSONObject();
+		StringBuffer sb = new StringBuffer();
 		try {
+			sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?><root>")
+			.append("<bookNumber>").append(bookerNumber).append("</bookNumber>")				//预约人
+			.append("<idNumber>").append(idNumber).append("</idNumber>")						//证件号码
+			.append("<platNumber>").append(platNumber).append("</platNumber>")					//车牌号*
+			.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>")		//业务类型ID*
+			.append("<organizationId>").append(organizationId).append("</organizationId>")		//预约单位ID*
+			.append("</root>");
+			String data = sb.toString();
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			logger.debug("【预约类服务】核发临牌预约信息请求报文xml， data = " + data);
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
-			JSONObject result = jsonObject.getJSONObject("result");
-			if(result!=null){
-				String data=result.getString("VehicleInfoVO");
-				vehicleInfoVO = JSON.parseObject(data, VehicleInfoVO.class);
+			Object obj = jsonObject.get("result");
+			if ("00".equals(code)) {
+				if(obj instanceof JSONObject && obj != null){
+					JSONObject result = (JSONObject) obj;
+					baseBean.setCode(MsgCode.success);
+					baseBean.setData(JSON.parseObject(result.getString("VehicleInfoVO"), VehicleInfoVO.class));
+				}else{
+					baseBean.setCode(MsgCode.paramsError);
+					baseBean.setMsg("未查询到记录");
+				}
+			}else {
+				baseBean.setCode(code);
+				baseBean.setMsg(msg);
 			}
+			logger.debug("【预约类服务】获取机动车预约信息结果:" + jsonObject);
 		} catch (Exception e) {
-			logger.error("getVehicleInfo 失败 ， map = " + map);
+			logger.error("【预约类服务】获取机动车预约信息异常， sb = " + sb.toString());
 			throw e;
 		}
-		return vehicleInfoVO;
+		return baseBean;
 
 	}
 	
@@ -572,53 +614,53 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	 * @throws Exception
 	 */
 	public BaseBean createTemporaryLicenseVehicleInfo(CreateTemporaryLicenseVehicleInfoVo vo) throws Exception {
-		BaseBean baseBean = new BaseBean();
 		logger.debug("【预约类服务】核发临牌预约信息写入createTemporaryLicenseVehicleInfo... 业务类型ID = " + vo.getBusinessTypeId());
-
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("orgId", vo.getOrgId());  					//预约地点ID
-		map.put("businessTypeId", vo.getBusinessTypeId());  //业务类型ID
-		map.put("name", vo.getName());						//姓名
-		map.put("idTypeId", vo.getIdTypeId());				//证件种类ID
-		map.put("idNumber", vo.getIdNumber());				//证件号码
-		map.put("mobile", vo.getMobile());					//手机号码
-		map.put("adress", vo.getAdress());					//居住地址
-		map.put("appointmentDate", vo.getAppointmentDate());//预约日期
-		map.put("appointmentTime", vo.getAppointmentTime());//预约时间
-		map.put("carTypeId", vo.getCarTypeId());			//车辆类型ID
-		map.put("carFrame", vo.getCarFrame());				//车架号
-		map.put("platNumber", vo.getCarFrame());			//车牌号或车架号(机动车注册，核发临牌，机动车转移登记（市内过户），机动车变更登记（夫妻变更）这些业务由于没有车牌号码，就传车架号)
-		map.put("chineseBrand", vo.getChineseBrand());		//中文品牌
-		map.put("vehicleType", vo.getVehicleType());		//车辆型号
-		map.put("passengerNumber", vo.getPassengerNumber());//载客人数(请确保载客人数是数值的字符串：“整数值”)
-		map.put("engineNumber", vo.getEngineNumber());		//发动机号
-		map.put("bookerName", vo.getName());				//预约人*
-		map.put("bookerIdNumber", null==vo.getBookerIdNumber()?"":vo.getBookerIdNumber());	//预约人身份证号码*
-		map.put("bookerType",null==vo.getBookerType()?"":vo.getBookerType());				//预约方式*(‘0’本人)
-		map.put("rzjs", null==vo.getRzjs()?"":vo.getRzjs());    							//认证角色*(‘2’企业星级用户，其他，非企业星级用户)
-		map.put("bookerMobile", vo.getBookerMobile());		//手机号
-		map.put("msgNumber", vo.getMsgNumber());			//短信验证码
-		map.put("arg2", null==vo.getArg2()?"":vo.getArg2());//保留字段*
-		map.put("arg3", null==vo.getArg3()?"":vo.getArg3());//保留字段*
-		map.put("arg4", null==vo.getArg4()?"":vo.getArg4());//保留字段*
-		map.put("arg5", null==vo.getArg5()?"":vo.getArg5());//保留字段*
-		logger.debug("【预约类服务】核发临牌预约信息， map = " + map);
+		BaseBean baseBean = new BaseBean();
+		String jkId = "JK16";	//接口编号
 		
-		String method = "createTemporaryLicenseVehicleInfo";//车管所接口
 		try {
+			StringBuffer sb = new StringBuffer();
+			sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?><root>")
+			.append("<orgId>").append(vo.getOrgId()).append("</orgId>")									//预约地点ID
+			.append("<businessTypeId>").append(vo.getBusinessTypeId()).append("</businessTypeId>")		//业务类型ID
+			.append("<name>").append(vo.getName()).append("</name>")									//姓名
+			.append("<idTypeId>").append(vo.getIdTypeId()).append("</idTypeId>")						//证件种类ID
+			.append("<idNumber>").append(vo.getIdNumber()).append("</idNumber>")						//证件号码
+			.append("<mobile>").append(vo.getMobile()).append("</mobile>")								//手机号码                                                                                                                
+			.append("<address>").append(vo.getAdress()).append("</address>")							//居住地址
+			.append("<appointmentDate>").append(vo.getAppointmentDate()).append("</appointmentDate>")	//预约日期
+			.append("<appointmentTime>").append(vo.getAppointmentTime()).append("</appointmentTime>")	//预约时间
+			.append("<carTypeId>").append(vo.getCarTypeId()).append("</carTypeId>")						//车辆类型ID
+			.append("<carFrame>").append(vo.getCarFrame()).append("</carFrame>")						//车架号
+			.append("<platNumber>").append(vo.getPlatNumber()).append("</platNumber>")					//车牌号或车架号(机动车注册，核发临牌，机动车转移登记（市内过户），机动车变更登记（夫妻变更）这些业务由于没有车牌号码，就传车架号)
+			.append("<chineseBrand>").append(vo.getChineseBrand()).append("</chineseBrand>")			//中文品牌
+			.append("<vehicleType>").append(vo.getVehicleType()).append("</vehicleType>")				//车辆型号
+			.append("<passengerNumber>").append(vo.getPassengerNumber()).append("</passengerNumber>")	//载客人数(请确保载客人数是数值的字符串：“整数值”)
+			.append("<engineNumber>").append(vo.getEngineNumber()).append("</engineNumber>")			//发动机号
+			.append("<bookerName>").append(vo.getBookerName()).append("</bookerName>")					//预约人*
+			.append("<bookerIdNumber>").append(vo.getBookerIdNumber()).append("</bookerIdNumber>")		//预约人身份证号码*
+			.append("<bookerType>").append(vo.getBookerType()).append("</bookerType>")					//预约方式*(‘0’本人)
+			.append("<rzjs>").append(vo.getRzjs()).append("</rzjs>")									//认证角色*(‘2’企业星级用户，其他，非企业星级用户)
+			.append("<bookerMobile>").append(vo.getBookerMobile()).append("</bookerMobile>")			//手机号
+			.append("<msgNumber>").append(vo.getMsgNumber()).append("</msgNumber>")						//短信验证码
+			.append("</root>");
+			String data = sb.toString();
 			String url = iBookingBusinessCached.getStcUrl();
-			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			logger.debug("【预约类服务】核发临牌预约信息请求报文xml， data = " + data);
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
+			
 			String code = jsonObject.getString("code");
 			if("00".equals(code)){
 				baseBean.setCode(MsgCode.success);
 				baseBean.setMsg(jsonObject.getString("msg"));
 				baseBean.setData(jsonObject.getString("result"));
-			}else if("01".equals(code)){
+			}else if("01".equals(code) || "02".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(jsonObject.getString("msg"));
-			}else if("02".equals(code)){
-				baseBean.setCode(MsgCode.paramsError);
-				baseBean.setMsg(jsonObject.getString("msg"));
+				baseBean.setData(jsonObject.getString("result"));
 			}else if("03".equals(code)){
 				baseBean.setCode(MsgCode.paramsError);
 				baseBean.setMsg(jsonObject.getString("result"));
@@ -629,7 +671,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			}
 			logger.debug("【预约类服务】核发临牌预约信息写入结果:" + jsonObject);
 		} catch (Exception e) {
-			logger.error("【预约类服务】核发临牌预约信息写入异常 ， map = " + map);
+			logger.error("【预约类服务】核发临牌预约信息写入异常 ， vo = " + vo);
 			throw e;
 		}
 		return baseBean;
