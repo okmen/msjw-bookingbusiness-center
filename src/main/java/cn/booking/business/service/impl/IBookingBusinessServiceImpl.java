@@ -61,14 +61,18 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	 */
 	public List<CarTypeVO> getCarTypes() throws Exception {
 		List<CarTypeVO> carTypeVOs = null;
-		String method = "getCarTypes";
+		String jkId = "JK07";
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("arg0", "");
 		map.put("arg1", "");
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
-			jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
+			String data = "<root></root>";
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
 			JSONObject result = jsonObject.getJSONObject("result");
 			String carTypeVO = result.getString("CarTypeVO");
 			carTypeVOs = JSON.parseArray(carTypeVO, CarTypeVO.class);

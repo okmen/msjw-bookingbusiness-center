@@ -39,6 +39,12 @@ public class IBookingBusinessCachedImpl implements IBookingBusinessCached{
     @Value("${stcUrl}")
     private String stcUrl;
     
+    @Value("${cgsaccount}")
+    private String cgsaccount;
+    
+    @Value("${cgspassword}")
+    private String cgspassword;
+    
     @Value("${templateSendUrl}")
     private String templateSendUrl;
     
@@ -74,6 +80,16 @@ public class IBookingBusinessCachedImpl implements IBookingBusinessCached{
 
 	public String getTemplateSendUrl() {
 		return templateSendUrl;
+	}
+
+
+	public String getCgsaccount() {
+		return cgsaccount;
+	}
+
+
+	public String getCgspassword() {
+		return cgspassword;
 	}
     
 }
