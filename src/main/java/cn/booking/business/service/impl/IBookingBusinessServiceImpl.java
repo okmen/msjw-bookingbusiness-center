@@ -511,6 +511,19 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		BaseBean baseBean = new BaseBean();
 		String jkId = "JK24";	//接口编号
 		StringBuffer sb = new StringBuffer();
+<<<<<<< Updated upstream
+=======
+		sb.append("<root>")
+		.append("<bookNumber>").append(bookerNumber).append("</bookNumber>")	
+		.append("<idNumber>").append(idNumber).append("</idNumber>")	
+		.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>")	
+		.append("<organizationId>").append(organizationId).append("</organizationId>")
+		.append("</root>");
+		DriveInfoVO driveInfoVO = new DriveInfoVO();
+		String method = "getDriveInfo";
+		JSONObject jsonObject = new JSONObject();
+		String jkId = "JK24";
+>>>>>>> Stashed changes
 		try {
 			sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?><root>")
 			.append("<bookNumber>").append(bookerNumber).append("</bookNumber>")				//预约人
@@ -531,16 +544,24 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			if ("00".equals(code)) {
 				if(obj instanceof JSONObject && obj != null){
 					JSONObject result = (JSONObject) obj;
+<<<<<<< Updated upstream
 					baseBean.setCode(MsgCode.success);
 					baseBean.setData(JSON.parseObject(result.getString("DriveInfoVO"), DriveInfoVO.class));
 				}else{
 					baseBean.setCode(MsgCode.paramsError);
 					baseBean.setMsg("未查询到记录");
+=======
+					String data = result.getString("DriveInfoVO");
+					driveInfoVO = JSON.parseObject(data, DriveInfoVO.class);
+					
+>>>>>>> Stashed changes
 				}
 			}else {
 				baseBean.setCode(code);
 				baseBean.setMsg(msg);
 			}
+			driveInfoVO.setCode(code);
+			driveInfoVO.setMsg(msg);
 		} catch (Exception e) {
 			logger.error("【预约类服务】获取驾驶证预约信息异常， sb = " + sb.toString());
 			throw e;
