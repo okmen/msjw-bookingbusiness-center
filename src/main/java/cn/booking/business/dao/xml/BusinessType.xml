@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.booking.business.dao.mapper.BusinessTypeMapper">
+	
+	<parameterMap type="cn.booking.business.bean.BusinessTypePo" id="parameterBusinessType" />
+    <resultMap type="cn.booking.business.bean.BusinessTypePo" id="resultBusinessType">
+		<result property="id" column="id" />
+		<result property="businessId" column="business_id" />
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="lx" column="lx" />
+	</resultMap>
+
+	<sql id="common">
+		id,business_id,code,name,description,lx
+	</sql>
+	
+	<insert id="addBatch" parameterMap="parameterBusinessType" useGeneratedKeys="true" keyProperty="id" >
+		insert into t_business_type (
+			business_id,code,name,description,lx
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+            (#{item.businessId}, #{item.code},#{item.name},#{item.description},#{item.lx})
+        </foreach>
+	</insert>
+	
+	<!-- 查询所有-->
+	<select id="getAll" resultMap="resultBusinessType">
+		select <include refid="common" /> from t_business_type;
+	</select>
+	
+	<delete id="deleteAll">
+		delete from t_business_type;
+	</delete>
+	
+</mapper>

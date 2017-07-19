@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.booking.business.dao.mapper.AppointmentMapper">
+	
+	<parameterMap type="cn.booking.business.bean.AppointmentPo" id="parameterAppointment" />
+    <resultMap type="cn.booking.business.bean.AppointmentPo" id="resultAppointment">
+		<result property="id" column="id" />
+		<result property="appointment" column="appointment" />
+		<result property="createDate" column="create_date" />
+	</resultMap>
+
+	<sql id="common">
+		id,appointment,create_date
+	</sql>
+	
+	<insert id="addBatch" parameterMap="parameterAppointment" useGeneratedKeys="true" keyProperty="id" >
+		insert into t_appointment (
+			appointment,create_date
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+            (#{item.appointment}, #{item.createDate})
+        </foreach>
+	</insert>
+	
+	<!-- 查询所有-->
+	<select id="getAll" resultMap="resultAppointment">
+		select <include refid="common" /> from t_appointment;
+	</select>
+	
+	<delete id="deleteAll">
+		delete from t_appointment;
+	</delete>
+	
+</mapper>

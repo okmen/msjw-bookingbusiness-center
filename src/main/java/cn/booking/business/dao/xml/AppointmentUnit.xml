@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.booking.business.dao.mapper.AppointmentUnitMapper">
+	
+	<parameterMap type="cn.booking.business.bean.AppointmentUnitPo" id="parameterAppointmentUnit" />
+    <resultMap type="cn.booking.business.bean.AppointmentUnitPo" id="resultAppointmentUnit">
+		<result property="id" column="id" />
+		<result property="appointmentUnitId" column="appointment_unit_id" />
+		<result property="name" column="name" />
+		<result property="code" column="code" />
+		<result property="description" column="description" />
+		<result property="pointx" column="pointx" />
+		<result property="pointy" column="pointy" />
+	</resultMap>
+
+	<sql id="common">
+		id,appointment_unit_id,name,code,description,pointx,pointy
+	</sql>
+	
+	<insert id="addBatch" parameterMap="parameterAppointmentUnit" useGeneratedKeys="true" keyProperty="id" >
+		insert into t_appointment_unit (
+			appointment_unit_id,name,code,description,pointx,pointy
+		)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+            (#{item.appointmentUnitId}, #{item.name}, #{item.code}, #{item.description}, #{item.pointx}, #{item.pointy})
+        </foreach>
+	</insert>
+	
+	<!-- 查询所有-->
+	<select id="getAll" resultMap="resultAppointmentUnit">
+		select <include refid="common" /> from t_appointment_unit;
+	</select>
+	
+	<delete id="deleteAll">
+		delete from t_appointment_unit;
+	</delete>
+	
+</mapper>

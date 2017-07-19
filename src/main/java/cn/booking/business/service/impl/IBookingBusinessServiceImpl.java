@@ -76,6 +76,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 	@Override
 	public List<BusinessTypeVO> getBusinessTypes(String type, String part, String arg0, String arg1) throws Exception {
+		//先查询缓存，没有则查询数据库，没有则调用接口，存 数据库，存缓存
+		
 		List<BusinessTypeVO> businessTypeVOs = null;
 		String jkId = "JK04";
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();

@@ -11,4 +11,10 @@ public interface ICacheKey {
 	public static int USER_VALIDATE_CODE = 300; //短信验证码有效期
 	public static int SEND_FREQ_LIMIT = 5; //短信发送频率限制5秒发一条
 	public static String ACCOUNT_DOC = "ACCOUNT_DOC_"; //须知
+	
+	
+	public static String ICarTypeCached = "szjj_bookingbusiness_ICarTypeCached";
+	public static String IIdCardTypeCached = "szjj_bookingbusiness_IIdCardTypeCached";
+	public static String IUseNatureCached = "szjj_bookingbusiness_IUseNatureCached";
+	public static String IVehicleNodelCached = "szjj_bookingbusiness_IVehicleNodelCached";
 }
