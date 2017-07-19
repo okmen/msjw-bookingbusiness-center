@@ -203,22 +203,21 @@ public class BookingBusinessServiceTest extends TestCase {
 		System.out.println(result);
 	}
 	
-	
 	/**
-	 * 香港机动车驾驶证免试换证
+	 * 满分学习考试
 	 * @throws Exception
 	 */
 	@Test
-	public void testcreateDrivveInfo_13() throws Exception{
+	public void testcreateDrivveInfo_10() throws Exception{
 		CreateDriveinfoVo cv = new CreateDriveinfoVo();
 		cv.setOrgId("e4e48584399473d20139947d9ee82b2a");
-		cv.setBusinessTypeId("4028828244914e4401455efaf3e433dc");
+		cv.setBusinessTypeId("402882823d681283013d6cfcb345000a");
 		cv.setName("测试");
 		cv.setIdTypeId("e4e48584399473d20139947f125e2b2c");
 		cv.setMobile("13627267056");
 		cv.setIdNumber("42138119910422133X");
 		cv.setBookerMobile("13627267056");
-		cv.setMsgNumber("246236");
+		cv.setMsgNumber("702679");
 		cv.setAppointmentDate("2017-07-26");
 		cv.setAppointmentTime("09:00-12:00");
 		cv.setBookerName("");
@@ -227,6 +226,7 @@ public class BookingBusinessServiceTest extends TestCase {
 		BaseBean bean = iBookingBusinessService.createDriveinfo(cv);
 		System.out.println(bean);
 	}
+	
 	/**
 	 * 持境外驾驶证申请换证
 	 * @throws Exception
@@ -396,7 +396,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	@Test
 	public void simpleSendMessage() throws Exception{
 		SmsInfoVO smsInfoVO = iBookingBusinessService.simpleSendMessage("13627267056", 
-				"e4e48584399473d20139947f125e2b2c", "1", "192.168.1.247", "0", "测试", "42138119910422133X", "42138119910422133X", "ZJ22");
+				"e4e48584399473d20139947f125e2b2c", "1", "192.168.1.247", "0", "测试", "42138119910422133X", "42138119910422133X", "ZJ10");
 		System.out.println(smsInfoVO);
 	}
 	@Test
@@ -581,18 +581,18 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void cancel() throws Exception{
-		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "170718200001", "13627267056");
+		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "170719151135", "18682050170");
 		System.out.println(smsInfoVO);
 	}
-	/*@Test
+	@Test
 	public void getDriveInfo() throws Exception{
-		DriveInfoVO driveInfoVO = iBookingBusinessService.getDriveInfo("170718200001", "42138119910422133X", "", "");
-		System.out.println(driveInfoVO);
+		BaseBean driveInfo = iBookingBusinessService.getDriveInfo("17071416520C", "42138119910422133X", "", "");
+		System.out.println(driveInfo);
 	}
 	@Test
 	public void getVehicleInfo() throws Exception{
-		VehicleInfoVO vehicleInfoVO = iBookingBusinessService.getVehicleInfo("17071311121E", "622822198502074110", "", "","");
-		System.out.println(vehicleInfoVO);
+		BaseBean vehicleInfo = iBookingBusinessService.getVehicleInfo("17071311121E", "622822198502074110", "", "","");
+		System.out.println(vehicleInfo);
 
-	}*/
+	}
 }
