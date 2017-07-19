@@ -17,7 +17,7 @@
 		id,car_type_id,code,name,description,create_date
 	</sql>
 	
-	<insert id="addBatch" parameterMap="parameterCarType" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="addBatch" parameterMap="parameterCarType" >
 		insert into t_car_type (
 			car_type_id,code,name,description,create_date
 		)

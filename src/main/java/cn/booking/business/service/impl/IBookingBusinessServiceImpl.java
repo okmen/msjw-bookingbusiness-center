@@ -1,11 +1,14 @@
 package cn.booking.business.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +30,8 @@ import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.bean.UseNaturePo;
 import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.bean.VehicleNodelPo;
+import cn.booking.business.cache.ICacheKey;
+import cn.booking.business.cache.ICarTypeCached;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
 import cn.booking.business.dao.ICarTypeDao;
 import cn.booking.business.dao.IIdCardTypeDao;
@@ -53,23 +58,45 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	private IVehicleNodelDao iVehicleNodelDao;
 	@Autowired
 	private ICarTypeDao carTypeDao;
+	@Autowired
+	private ICarTypeCached iCarTypeCached;
 	
 	public List<CarTypeVO> getCarTypes() throws Exception {
 		List<CarTypeVO> carTypeVOs = null;
-		String jkId = "JK07";
-		JSONObject jsonObject = new JSONObject();
-		try {
-			String url = iBookingBusinessCached.getStcUrl();
-			String account = iBookingBusinessCached.getCgsaccount();
-			String password = iBookingBusinessCached.getCgspassword();
-			String data = "<root></root>";
-			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
-			JSONObject result = jsonObject.getJSONObject("result");
-			String carTypeVO = result.getString("CarTypeVO");
-			carTypeVOs = JSON.parseArray(carTypeVO, CarTypeVO.class);
-		} catch (Exception e) {
-			logger.error("getCarTypes 失败",e);
-			throw e;
+		String json = iCarTypeCached.getICarTypeByKey(ICacheKey.ICarTypeCached);
+		if(StringUtils.isNotBlank(json)){
+			carTypeVOs = JSON.parseArray(json, CarTypeVO.class);
+			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
+		}else{
+			String jkId = "JK07";
+			JSONObject jsonObject = new JSONObject();
+			try {
+				String url = iBookingBusinessCached.getStcUrl();
+				String account = iBookingBusinessCached.getCgsaccount();
+				String password = iBookingBusinessCached.getCgspassword();
+				String data = "<root></root>";
+				jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
+				JSONObject result = jsonObject.getJSONObject("result");
+				String carTypeVO = result.getString("CarTypeVO");
+				carTypeVOs = JSON.parseArray(carTypeVO, CarTypeVO.class);
+				//存mysql
+				List<CarTypePo> carTypePos = new ArrayList<CarTypePo>();
+				for(CarTypeVO carTypeVO2 : carTypeVOs){
+					CarTypePo carTypePo = new CarTypePo();
+					carTypePo.setCarTypeId(carTypeVO2.getId());
+					carTypePo.setCode(carTypeVO2.getCode());
+					carTypePo.setCreateDate(new Date());
+					carTypePo.setDescription(carTypeVO2.getDescription());
+					carTypePo.setName(carTypeVO2.getName());
+					carTypePos.add(carTypePo);
+				}
+				carTypeDao.addBatch(carTypePos);
+				//存redis
+				iCarTypeCached.setICarType(ICacheKey.ICarTypeCached, JSON.toJSONString(carTypeVOs));
+			} catch (Exception e) {
+				logger.error("getCarTypes 失败",e);
+				throw e;
+			}
 		}
 		return carTypeVOs;
 	}

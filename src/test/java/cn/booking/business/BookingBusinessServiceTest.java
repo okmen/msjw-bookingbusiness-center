@@ -11,18 +11,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import cn.booking.business.bean.AppTimeHelper;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypePo;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.CreateDriveinfoVo;
 import cn.booking.business.bean.CreateVehicleInfoVo;
-import cn.booking.business.bean.DriveInfoVO;
 import cn.booking.business.bean.IdCardTypePo;
+import cn.booking.business.bean.IdTypeVO;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
 import cn.booking.business.bean.UseNaturePo;
-import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.bean.VehicleNodelPo;
 import cn.booking.business.service.IBookingBusinessService;
 import cn.sdk.bean.BaseBean;
@@ -391,7 +389,8 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void getIdTypes() throws Exception {
-			iBookingBusinessService.getIdTypes("402882824747f258014754a501281430", "", "");
+			List<IdTypeVO>  idTypeVOs =	iBookingBusinessService.getIdTypes("402882824747f258014754a501281430", "", "");
+			System.out.println(idTypeVOs);
 	}
 	@Test
 	public void simpleSendMessage() throws Exception{
