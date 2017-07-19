@@ -504,7 +504,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		StringBuffer sb = new StringBuffer();
 
 		try {
-			sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?><root>")
+			sb.append("<root>")
 			.append("<bookNumber>").append(bookerNumber).append("</bookNumber>")				//预约人
 			.append("<idNumber>").append(idNumber).append("</idNumber>")						//证件号码
 			.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>")		//业务类型ID*
@@ -533,7 +533,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			}else {
 				baseBean.setCode(code);
 				baseBean.setMsg(msg);
-			};
+			}
+			logger.debug("【预约类服务】获取驾驶证预约信息结果:" + jsonObject);
 		} catch (Exception e) {
 			logger.error("【预约类服务】获取驾驶证预约信息异常， sb = " + sb.toString());
 			throw e;
@@ -560,7 +561,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 		StringBuffer sb = new StringBuffer();
 		try {
-			sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?><root>")
+			sb.append("<root>")
 			.append("<bookNumber>").append(bookerNumber).append("</bookNumber>")				//预约人
 			.append("<idNumber>").append(idNumber).append("</idNumber>")						//证件号码
 			.append("<platNumber>").append(platNumber).append("</platNumber>")					//车牌号*
@@ -571,7 +572,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			String url = iBookingBusinessCached.getStcUrl();
 			String account = iBookingBusinessCached.getCgsaccount();
 			String password = iBookingBusinessCached.getCgspassword();
-			logger.debug("【预约类服务】核发临牌预约信息请求报文xml， data = " + data);
+			logger.debug("【预约类服务】获取机动车预约信息请求报文xml， data = " + data);
 			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
 			String code = jsonObject.getString("code");
@@ -613,7 +614,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		
 		try {
 			StringBuffer sb = new StringBuffer();
-			sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?><root>")
+			sb.append("<root>")
 			.append("<orgId>").append(vo.getOrgId()).append("</orgId>")									//预约地点ID
 			.append("<businessTypeId>").append(vo.getBusinessTypeId()).append("</businessTypeId>")		//业务类型ID
 			.append("<name>").append(vo.getName()).append("</name>")									//姓名
