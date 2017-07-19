@@ -54,30 +54,21 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Autowired
 	private ICarTypeDao carTypeDao;
 	
-	
-	
-	/**
-	 * 获取车辆类型列表
-	 */
 	public List<CarTypeVO> getCarTypes() throws Exception {
 		List<CarTypeVO> carTypeVOs = null;
 		String jkId = "JK07";
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("arg0", "");
-		map.put("arg1", "");
 		JSONObject jsonObject = new JSONObject();
 		try {
 			String url = iBookingBusinessCached.getStcUrl();
 			String account = iBookingBusinessCached.getCgsaccount();
 			String password = iBookingBusinessCached.getCgspassword();
-			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			String data = "<root></root>";
 			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
 			JSONObject result = jsonObject.getJSONObject("result");
 			String carTypeVO = result.getString("CarTypeVO");
 			carTypeVOs = JSON.parseArray(carTypeVO, CarTypeVO.class);
 		} catch (Exception e) {
-			logger.error("getCarTypes 失败 ， map = " + map);
+			logger.error("getCarTypes 失败",e);
 			throw e;
 		}
 		return carTypeVOs;
@@ -679,6 +670,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		return baseBean;
 	}
 
+	
+	
 	@Override
 	public int addBatchCarType(List<CarTypePo> carTypePos) throws Exception {
 		return carTypeDao.addBatch(carTypePos);

@@ -350,7 +350,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void getBusinessTypes() throws Exception {
-		List<BusinessTypeVO> businessTypeVOs = iBookingBusinessService.getBusinessTypes("1","1","","");
+		List<BusinessTypeVO> businessTypeVOs = iBookingBusinessService.getBusinessTypes("1","","","");
 		for (BusinessTypeVO businessTypeVO : businessTypeVOs) {
 			System.out.println(businessTypeVO.getCode()+"---");
 		}
