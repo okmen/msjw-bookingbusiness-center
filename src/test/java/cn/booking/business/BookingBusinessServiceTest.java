@@ -210,12 +210,12 @@ public class BookingBusinessServiceTest extends TestCase {
 		CreateDriveinfoVo cv = new CreateDriveinfoVo();
 		cv.setOrgId("e4e48584399473d20139947d9ee82b2a");
 		cv.setBusinessTypeId("402882823d681283013d6cfcb345000a");
-		cv.setName("测试");
+		cv.setName("初道科技");
 		cv.setIdTypeId("e4e48584399473d20139947f125e2b2c");
 		cv.setMobile("13627267056");
 		cv.setIdNumber("42138119910422133X");
 		cv.setBookerMobile("13627267056");
-		cv.setMsgNumber("702679");
+		cv.setMsgNumber("299738");
 		cv.setAppointmentDate("2017-07-26");
 		cv.setAppointmentTime("09:00-12:00");
 		cv.setBookerName("");
@@ -262,7 +262,7 @@ public class BookingBusinessServiceTest extends TestCase {
 		cv.setMobile("13627267056");
 		cv.setIdNumber("42138119910422133X");
 		cv.setBookerMobile("13627267056");
-		cv.setMsgNumber("811756");
+		cv.setMsgNumber("152435");
 		cv.setAppointmentDate("2017-07-26");
 		cv.setAppointmentTime("09:00-12:00");
 		cv.setBookerName("");
@@ -395,7 +395,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	@Test
 	public void simpleSendMessage() throws Exception{
 		SmsInfoVO smsInfoVO = iBookingBusinessService.simpleSendMessage("13627267056", 
-				"e4e48584399473d20139947f125e2b2c", "1", "192.168.1.247", "0", "测试", "42138119910422133X", "42138119910422133X", "ZJ10");
+				"e4e48584399473d20139947f125e2b2c", "1", "192.168.1.247", "0", "测试", "42138119910422133X", "42138119910422133X", "ZJ20");
 		System.out.println(smsInfoVO);
 	}
 	@Test
@@ -580,12 +580,12 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void cancel() throws Exception{
-		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "170719151135", "18682050170");
+		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "170720149850", "13627267056");
 		System.out.println(smsInfoVO);
 	}
 	@Test
 	public void getDriveInfo() throws Exception{
-		BaseBean driveInfo = iBookingBusinessService.getDriveInfo("17071416520C", "42138119910422133X", "", "");
+		BaseBean driveInfo = iBookingBusinessService.getDriveInfo("170720149850", "42138119910422133X", "", "");
 		System.out.println(driveInfo);
 	}
 	@Test
