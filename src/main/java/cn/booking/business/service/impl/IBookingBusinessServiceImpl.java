@@ -433,6 +433,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			str.append("<bookerMobile>").append(vehicleInfoVo.getBookerMobile()).append("</bookerMobile>");
 			str.append("<msgNumber>").append(vehicleInfoVo.getMsgNumber()).append("</msgNumber>");
 			str.append("</root>");
+			logger.debug("【预约类服务】机动车预约信息请求报文xml， data = " + str);
 			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
@@ -470,6 +471,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		.append("<msgNumber>").append(createDriveinfoVo.getMsgNumber()).append("</msgNumber>")
 		.append("</root>");
 		logger.debug("【预约类服务】驾驶证预约信息, createDriveinfoVo = " + createDriveinfoVo);
+		logger.debug("【预约类服务】驾驶证预约信息请求报文xml， data = " + sb.toString());
 		JSONObject jsonObject = new JSONObject();
 		String jkId = "JK01";
 		String method = "createDriveinfo";
@@ -556,7 +558,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 					baseBean.setData(JSON.parseObject(result.getString("DriveInfoVO"), DriveInfoVO.class));
 				}else{
 					baseBean.setCode(MsgCode.paramsError);
-					baseBean.setMsg("未查询到记录");
+					baseBean.setMsg("未查询到相应记录");
 
 				}
 			}else {
