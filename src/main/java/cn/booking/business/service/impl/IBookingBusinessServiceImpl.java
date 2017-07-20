@@ -250,10 +250,10 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			str.append("<orgId>").append(orgId).append("</orgId>");
 			str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>");
 			str.append("<carTypeId>").append(carTypeId).append("</carTypeId>");
-			str.append("<optlittleCar>").append(optlittleCar).append("</optlittleCar>");
+			str.append("<optlittleCar>").append(null == optlittleCar ? "" : optlittleCar).append("</optlittleCar>");
 			str.append("</root>");
 			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
-
+			logger.info("请求报文："+str.toString());
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			try{
@@ -300,7 +300,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			str.append("<root><orgId>").append(orgId).append("</orgId>");
 			str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>").append("</root>");
 			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
-
+			logger.info("请求报文："+str.toString());
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
 			JSONObject result = jsonObject.getJSONObject("result");
@@ -363,6 +363,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			str.append("<idNumber>").append(idNumber).append("</idNumber>");
 			str.append("<codes>").append(codes).append("</codes>");
 			str.append("</root>");
+			logger.info("请求报文："+str.toString());
 			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
@@ -424,16 +425,17 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			str.append("<bookerName>").append(vehicleInfoVo.getBookerName()).append("</bookerName>");
 			str.append("<bookerIdNumber>").append(vehicleInfoVo.getBookerIdNumber()).append("</bookerIdNumber>");
 			str.append("<bookerType>").append(vehicleInfoVo.getBookerType()).append("</bookerType>");
-			str.append("<rzjs>").append(vehicleInfoVo.getRzjs()).append("</rzjs>");
-			str.append("<optlittleCar>").append(vehicleInfoVo.getOptlittleCar()).append("</optlittleCar>");
-			str.append("<indexType>").append(vehicleInfoVo.getIndexType()).append("</indexType>");
-			str.append("<indexNo>").append(vehicleInfoVo.getIndexNo()).append("</indexNo>");
-			str.append("<useCharater>").append(vehicleInfoVo.getUseCharater()).append("</useCharater>");
-			str.append("<modelName>").append(vehicleInfoVo.getModelName()).append("</modelName>");
+			str.append("<rzjs>").append(null == vehicleInfoVo.getRzjs() ? "Show" : vehicleInfoVo.getRzjs()).append("</rzjs>");
+			str.append("<optlittleCar>").append(null == vehicleInfoVo.getOptlittleCar() ? "" : vehicleInfoVo.getOptlittleCar()).append("</optlittleCar>");
+			str.append("<indexType>").append(null == vehicleInfoVo.getIndexType() ? "" : vehicleInfoVo.getIndexType()).append("</indexType>");
+			str.append("<indexNo>").append(null == vehicleInfoVo.getIndexNo() ? "" : vehicleInfoVo.getIndexNo()).append("</indexNo>");
+			str.append("<useCharater>").append(null == vehicleInfoVo.getUseCharater() ? "" : vehicleInfoVo.getUseCharater()).append("</useCharater>");
+			str.append("<modelName>").append(null == vehicleInfoVo.getModelName() ? "" : vehicleInfoVo.getModelName()).append("</modelName>");
 			str.append("<bookerMobile>").append(vehicleInfoVo.getBookerMobile()).append("</bookerMobile>");
 			str.append("<msgNumber>").append(vehicleInfoVo.getMsgNumber()).append("</msgNumber>");
 			str.append("</root>");
 			logger.debug("【预约类服务】机动车预约信息请求报文xml， data = " + str);
+
 			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			String code = jsonObject.getString("code");
 			String msg = jsonObject.getString("msg");
