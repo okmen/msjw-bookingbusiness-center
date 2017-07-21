@@ -14,7 +14,7 @@
 		id,appointment,create_date
 	</sql>
 	
-	<insert id="addBatch" parameterMap="parameterAppointment" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="addBatch" parameterMap="parameterAppointment">
 		insert into t_appointment (
 			appointment,create_date
 		)

@@ -11,7 +11,7 @@ public interface BusinessTypeDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int addBatch(List<BusinessTypePo> vehicleNodelPos)throws Exception;
+	public int addBatch(List<BusinessTypePo> businessTypePos)throws Exception;
 	/**
 	 * 删除整张表
 	 * @return

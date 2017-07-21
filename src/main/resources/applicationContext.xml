@@ -22,4 +22,9 @@
 	
 	<context:property-placeholder location="classpath:config.properties" ignore-unresolvable="true"/>
 	
+	<bean id="bilinThreadPool" class="cn.sdk.thread.BilinThreadPool" />
+	
+	<bean id="cacheTaskExecute" class="cn.booking.business.utils.CacheTaskExecute" />
+	
+	
 </beans>

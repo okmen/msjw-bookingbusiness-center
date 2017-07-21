@@ -18,7 +18,7 @@
 		id,idcard_type_id,code,name,description,create_date
 	</sql>
 	
-	<insert id="addBatch" parameterMap="parameterIdCardType" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="addBatch" parameterMap="parameterIdCardType" >
 		insert into t_idcard_type(
 			idcard_type_id,code,name,description,create_date
 		)

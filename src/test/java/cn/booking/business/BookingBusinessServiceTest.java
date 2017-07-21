@@ -389,7 +389,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void getIdTypes() throws Exception {
-			List<IdTypeVO>  idTypeVOs =	iBookingBusinessService.getIdTypes("402882824747f258014754a501281430", "", "");
+			List<IdTypeVO>  idTypeVOs =	iBookingBusinessService.getIdTypes("e4e48584399473d201399483d85a2b31", "", "");
 			System.out.println(idTypeVOs);
 	}
 	@Test

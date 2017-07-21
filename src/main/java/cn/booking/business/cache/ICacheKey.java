@@ -17,4 +17,5 @@ public interface ICacheKey {
 	public static String IIdCardTypeCached = "szjj_bookingbusiness_IIdCardTypeCached";
 	public static String IUseNatureCached = "szjj_bookingbusiness_IUseNatureCached";
 	public static String IVehicleNodelCached = "szjj_bookingbusiness_IVehicleNodelCached";
+	public static String IusinessTypeCached = "szjj_bookingbusiness_IusinessTypeCached";
 }

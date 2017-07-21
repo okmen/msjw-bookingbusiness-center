@@ -17,7 +17,7 @@
 		id,business_id,code,name,description,lx
 	</sql>
 	
-	<insert id="addBatch" parameterMap="parameterBusinessType" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="addBatch" parameterMap="parameterBusinessType">
 		insert into t_business_type (
 			business_id,code,name,description,lx
 		)

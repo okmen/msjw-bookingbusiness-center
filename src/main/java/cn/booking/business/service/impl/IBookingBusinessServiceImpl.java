@@ -4,18 +4,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.booking.business.bean.AppTimeHelper;
+import cn.booking.business.bean.BusinessTypePo;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypePo;
 import cn.booking.business.bean.CarTypeVO;
@@ -25,20 +28,30 @@ import cn.booking.business.bean.CreateVehicleInfoVo;
 import cn.booking.business.bean.DriveInfoVO;
 import cn.booking.business.bean.IdCardTypePo;
 import cn.booking.business.bean.IdTypeVO;
+import cn.booking.business.bean.IndexTypeVo;
 import cn.booking.business.bean.OrgVO;
 import cn.booking.business.bean.SmsInfoVO;
+import cn.booking.business.bean.UseCharater;
 import cn.booking.business.bean.UseNaturePo;
 import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.bean.VehicleNodelPo;
+import cn.booking.business.cache.IBusinessTypeCached;
 import cn.booking.business.cache.ICacheKey;
 import cn.booking.business.cache.ICarTypeCached;
+import cn.booking.business.cache.IIdCardTypeCached;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
+import cn.booking.business.dao.BusinessTypeDao;
 import cn.booking.business.dao.ICarTypeDao;
 import cn.booking.business.dao.IIdCardTypeDao;
 import cn.booking.business.dao.IUseNatureDao;
 import cn.booking.business.dao.IVehicleNodelDao;
+import cn.booking.business.dao.impl.IdCardTypeDaoImpl;
 import cn.booking.business.service.IBookingBusinessService;
+import cn.booking.business.utils.CacheTask;
+import cn.booking.business.utils.CacheTaskExecute;
+import cn.booking.business.utils.TransferThirdParty;
 import cn.sdk.bean.BaseBean;
+import cn.sdk.thread.BilinThreadPool;
 import cn.sdk.util.MsgCode;
 import cn.sdk.webservice.WebServiceClient;
 
@@ -59,16 +72,55 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Autowired
 	private ICarTypeDao carTypeDao;
 	@Autowired
+	private IIdCardTypeDao iIdCardTypeDao;
+	@Autowired
+	private BusinessTypeDao businessTypeDao;
+	@Autowired
 	private ICarTypeCached iCarTypeCached;
+	@Autowired
+	private IBusinessTypeCached iBusinessTypeCached;
+	@Autowired
+	private IIdCardTypeCached idCardTypeCached;
+	
+	@Autowired
+	@Qualifier("bilinThreadPool")
+	private BilinThreadPool bilinThreadPool;
+    
+    @Autowired
+    @Qualifier("cacheTaskExecute")
+    private CacheTaskExecute cacheTaskExecute;
+    
 	
 	public List<CarTypeVO> getCarTypes() throws Exception {
 		List<CarTypeVO> carTypeVOs = null;
 		String json = iCarTypeCached.getICarTypeByKey(ICacheKey.ICarTypeCached);
+		//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
 		if(StringUtils.isNotBlank(json)){
 			carTypeVOs = JSON.parseArray(json, CarTypeVO.class);
-			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
+			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
+			try {
+				if(bilinThreadPool != null) {
+					bilinThreadPool.execute(new CacheTask(carTypeVOs));
+				}
+			}catch(Exception e){
+				logger.error("存储到缓存 错误", e);
+			}
 		}else{
-			String jkId = "JK07";
+			List<CarTypeVO> carTypeVOs2 = TransferThirdParty.getCarTypes();
+			List<CarTypePo> carTypePos = new ArrayList<CarTypePo>();
+			for(CarTypeVO carTypeVO2 : carTypeVOs){
+				CarTypePo carTypePo = new CarTypePo();
+				carTypePo.setCarTypeId(carTypeVO2.getId());
+				carTypePo.setCode(carTypeVO2.getCode());
+				carTypePo.setCreateDate(new Date());
+				carTypePo.setDescription(carTypeVO2.getDescription());
+				carTypePo.setName(carTypeVO2.getName());
+				carTypePos.add(carTypePo);
+			}
+			carTypeDao.addBatch(carTypePos);
+			//存redis
+			iCarTypeCached.setICarType(ICacheKey.ICarTypeCached, JSON.toJSONString(carTypeVOs));
+			/*String jkId = "JK07";
 			JSONObject jsonObject = new JSONObject();
 			try {
 				String url = iBookingBusinessCached.getStcUrl();
@@ -96,7 +148,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			} catch (Exception e) {
 				logger.error("getCarTypes 失败",e);
 				throw e;
-			}
+			}*/
 		}
 		return carTypeVOs;
 	}
@@ -104,57 +156,96 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Override
 	public List<BusinessTypeVO> getBusinessTypes(String type, String part, String arg0, String arg1) throws Exception {
 		//先查询缓存，没有则查询数据库，没有则调用接口，存 数据库，存缓存
-		
 		List<BusinessTypeVO> businessTypeVOs = null;
-		String jkId = "JK04";
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("type", type);
-		map.put("part", part);
-		map.put("arg0", null == arg0 ? "" : arg0);
-		map.put("arg1", null == arg1 ? "" : arg1);
-		JSONObject jsonObject = new JSONObject();
-		try {
-			String url = iBookingBusinessCached.getStcUrl();
-			String account = iBookingBusinessCached.getCgsaccount();
-			String password = iBookingBusinessCached.getCgspassword();
-			StringBuffer str=new StringBuffer();
-			str.append("<root><type>").append(type).append("</type>");
-			str.append("<part>").append(part).append("</part>").append("</root>");
-			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
-			JSONObject result = jsonObject.getJSONObject("result");
-			String BusinessTypeVO = result.getString("BusinessTypeVO");
-			businessTypeVOs = JSON.parseArray(BusinessTypeVO, BusinessTypeVO.class);
-		} catch (Exception e) {
-			logger.error("getBusinessTypes 失败 ， map = " + map);
-			throw e;
+		String json = iBusinessTypeCached.getIBusinessTypeByKey(ICacheKey.IusinessTypeCached);
+		if(StringUtils.isNotBlank(json)){
+			businessTypeVOs = JSON.parseArray(json, BusinessTypeVO.class);
+			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
+		}else{
+			String jkId = "JK04";
+			LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+			map.put("type", type);
+			map.put("part", part);
+			map.put("arg0", null == arg0 ? "" : arg0);
+			map.put("arg1", null == arg1 ? "" : arg1);
+			JSONObject jsonObject = new JSONObject();
+			try {
+				String url = iBookingBusinessCached.getStcUrl();
+				String account = iBookingBusinessCached.getCgsaccount();
+				String password = iBookingBusinessCached.getCgspassword();
+				StringBuffer str=new StringBuffer();
+				str.append("<root><type>").append(type).append("</type>");
+				str.append("<part>").append(part).append("</part>").append("</root>");
+				jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
+				JSONObject result = jsonObject.getJSONObject("result");
+				String BusinessTypeVO = result.getString("BusinessTypeVO");
+				businessTypeVOs = JSON.parseArray(BusinessTypeVO, BusinessTypeVO.class);
+				
+				//存mysql
+				List<BusinessTypePo> businessTypePos = new ArrayList<BusinessTypePo>();
+				for(BusinessTypeVO businessTypeVO2 : businessTypeVOs){
+					BusinessTypePo businessTypePo = new BusinessTypePo();
+					businessTypePo.setBusinessId(businessTypeVO2.getId());
+					businessTypePo.setCode(businessTypeVO2.getCode());
+					businessTypePo.setDescription(businessTypeVO2.getDescription());
+					businessTypePo.setLx(businessTypeVO2.getLx());
+					businessTypePo.setName(businessTypeVO2.getName());
+					businessTypePos.add(businessTypePo);
+				}
+				businessTypeDao.addBatch(businessTypePos);
+				iBusinessTypeCached.setIBusinessType(ICacheKey.IusinessTypeCached, JSON.toJSONString(businessTypeVOs));
+			} catch (Exception e) {
+				logger.error("getBusinessTypes 失败 ， map = " + map);
+				throw e;
+			}
 		}
 		return businessTypeVOs;
 	}
 
 	@Override
 	public List<IdTypeVO> getIdTypes(String businessTypeId, String arg0, String arg1) throws Exception {
-		String jkId = "JK06";
 		List<IdTypeVO> idTypeVos = null;
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("businessTypeId", businessTypeId);
-		map.put("arg0", null == arg0 ? "" : arg0);
-		map.put("arg1", null == arg1 ? "" : arg1);
-		JSONObject jsonObject = new JSONObject();
-		try {
-			String url = iBookingBusinessCached.getStcUrl();
-			String account = iBookingBusinessCached.getCgsaccount();
-			String password = iBookingBusinessCached.getCgspassword();
-			StringBuffer str=new StringBuffer();
-			str.append("<root>");
-			str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>");
-			str.append("</root>");
-			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
-			JSONObject result = jsonObject.getJSONObject("result");
-			String IdTypeVO = result.getString("IdTypeVO");
-			idTypeVos = JSON.parseArray(IdTypeVO, IdTypeVO.class);
-		} catch (Exception e) {
-			logger.error("getCarTypes 失败 ， map = " + map);
-			throw e;
+		String json = idCardTypeCached.getIIdCardTypeByKey(ICacheKey.IusinessTypeCached);
+		if(json.equals("====")){
+			idTypeVos = JSON.parseArray(json, IdTypeVO.class);
+			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
+		}else{
+			String jkId = "JK06";
+			LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+			map.put("businessTypeId", businessTypeId);
+			map.put("arg0", null == arg0 ? "" : arg0);
+			map.put("arg1", null == arg1 ? "" : arg1);
+			JSONObject jsonObject = new JSONObject();
+			try {
+				String url = iBookingBusinessCached.getStcUrl();
+				String account = iBookingBusinessCached.getCgsaccount();
+				String password = iBookingBusinessCached.getCgspassword();
+				StringBuffer str=new StringBuffer();
+				str.append("<root>");
+				str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>");
+				str.append("</root>");
+				jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
+				JSONObject result = jsonObject.getJSONObject("result");
+				String IdTypeVO = result.getString("IdTypeVO");
+				idTypeVos = JSON.parseArray(IdTypeVO, IdTypeVO.class);
+				
+				//存mysql
+				List<IdCardTypePo> idCardTypePos = new ArrayList<IdCardTypePo>();
+				for(IdTypeVO idTypeVO2 : idTypeVos){
+					IdCardTypePo idCardTypePo = new IdCardTypePo();
+					idCardTypePo.setCode(idTypeVO2.getCode());
+					idCardTypePo.setCreateDate(new Date());
+					idCardTypePo.setDescription(idTypeVO2.getDescription());
+					idCardTypePo.setIdcardTypeId(idTypeVO2.getId());
+					idCardTypePo.setName(idTypeVO2.getName());
+					idCardTypePos.add(idCardTypePo);
+				}
+				iIdCardTypeDao.addBatch(idCardTypePos);
+				idCardTypeCached.setIIdCardType(ICacheKey.IusinessTypeCached, JSON.toJSONString(idCardTypePos));
+			} catch (Exception e) {
+				logger.error("getCarTypes 失败 ， map = " + map);
+				throw e;
+			}
 		}
 		return idTypeVos;
 	}
@@ -764,6 +855,184 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Override
 	public List<VehicleNodelPo> getAllVehicleNodel() throws Exception {
 		return iVehicleNodelDao.getAll();
+	}
+
+	
+	@Override
+	public Map<String, String> getCarModelArray() throws Exception {
+		Map<String, String> map = new LinkedHashMap<>();
+		map.put("K31", "小型普通客车");
+		map.put("K32", "小型越野客车");
+		map.put("K33", "小型轿车");
+		map.put("K34", "小型专用客车");
+		map.put("K41", "微型普通客车");
+		map.put("K42", "微型越野客车");
+		map.put("K43", "微型轿车");
+		map.put("M11", "普通正三轮摩托车");
+		map.put("M12", "轻便正三轮摩托车");
+		map.put("M13", "正三轮载客摩托车");
+		map.put("M14", "正三轮载货摩托车");
+		map.put("M15", "侧三轮摩托车");
+		map.put("M21", "普通二轮摩托车");
+		map.put("M22", "轻便二轮摩托车");
+		map.put("N11", "三轮汽车");
+		map.put("K11", "大型普通客车");
+		map.put("K12", "大型双层客车");
+		map.put("K13", "大型卧铺客车");
+		map.put("K14", "大型铰接客车");
+		map.put("K15", "大型越野客车");
+		map.put("K16", "大型轿车");
+		map.put("K17", "大型专用客车");
+		map.put("K21", "中型普通客车");
+		map.put("K22", "中型双层客车");
+		map.put("K23", "中型卧铺客车");
+		map.put("K24", "中型铰接客车");
+		map.put("K25", "中型越野客车");
+		map.put("K26", "中型轿车");
+		map.put("K27", "中型专用客车");
+		map.put("B11", "重型普通半挂车");
+		map.put("B12", "重型厢式半挂车");
+		map.put("B13", "重型罐式半挂车");
+		map.put("B14", "重型平板半挂车");
+		map.put("B15", "重型集装箱半挂车");
+		map.put("B16", "重型自卸半挂车");
+		map.put("B17", "重型特殊结构半挂车");
+		map.put("B18", "重型仓栅式半挂车");
+		map.put("B19", "重型旅居半挂车");
+		map.put("B1A", "重型专项作业半挂车");
+		map.put("B1B", "重型低平板半挂车");
+		map.put("B21", "中型普通半挂车");
+		map.put("B22", "中型厢式半挂车");
+		map.put("B23", "中型罐式半挂车");
+		map.put("B24", "中型平板半挂车");
+		map.put("B25", "中型集装箱半挂车");
+		map.put("B26", "中型自卸半挂车");
+		map.put("B27", "中型特殊结构半挂车");
+		map.put("B28", "中型仓栅式半挂车");
+		map.put("B29", "中型旅居半挂车");
+		map.put("B2A", "中型专项作业半挂车");
+		map.put("B2B", "中型低平板半挂车");
+		map.put("B31", "轻型普通半挂车");
+		map.put("B32", "轻型厢式半挂车");
+		map.put("B33", "轻型罐式半挂车");
+		map.put("B34", "轻型平板半挂车");
+		map.put("B35", "轻型自卸半挂车");
+		map.put("B36", "轻型仓栅式半挂车");
+		map.put("B37", "轻型旅居半挂车");
+		map.put("B38", "轻型专项作业半挂车");
+		map.put("B39", "轻型低平板半挂车");
+		map.put("D11", "无轨电车");
+		map.put("D12", "有轨电车");
+		map.put("G11", "重型普通全挂车");
+		map.put("G12", "重型厢式全挂车");
+		map.put("G13", "重型罐式全挂车");
+		map.put("G14", "重型平板全挂车");
+		map.put("G15", "重型集装箱全挂车");
+		map.put("G16", "重型自卸全挂车");
+		map.put("G17", "重型仓栅式全挂车");
+		map.put("G18", "重型旅居全挂车");
+		map.put("G19", "重型专项作业全挂车");
+		map.put("G21", "中型普通全挂车");
+		map.put("G22", "中型厢式全挂车");
+		map.put("G23", "中型罐式全挂车");
+		map.put("G24", "中型平板全挂车");
+		map.put("G25", "中型集装箱全挂车");
+		map.put("G26", "中型自卸全挂车");
+		map.put("G27", "中型仓栅式全挂车");
+		map.put("G28", "中型旅居全挂车");
+		map.put("G29", "中型专项作业全挂车");
+		map.put("G31", "轻型普通全挂车");
+		map.put("G32", "轻型厢式全挂车");
+		map.put("G33", "轻型罐式全挂车");
+		map.put("G34", "轻型平板全挂车");
+		map.put("G35", "轻型自卸全挂车");
+		map.put("G36", "轻型仓栅式全挂车");
+		map.put("G37", "轻型旅居全挂车");
+		map.put("G38", "轻型专项作业全挂车");
+		map.put("H11", "重型普通货车");
+		map.put("H12", "重型厢式货车");
+		map.put("H13", "重型封闭货车");
+		map.put("H14", "重型罐式货车");
+		map.put("H15", "重型平板货车");
+		map.put("H16", "重型集装厢车");
+		map.put("H17", "重型自卸货车");
+		map.put("H18", "重型特殊结构货车");
+		map.put("H19", "重型仓栅式货车");
+		map.put("H21", "中型普通货车");
+		map.put("H22", "中型厢式货车");
+		map.put("H23", "中型封闭货车");
+		map.put("H24", "中型罐式货车");
+		map.put("H25", "中型平板货车");
+		map.put("H26", "中型集装厢车");
+		map.put("H27", "中型自卸货车");
+		map.put("H28", "中型特殊结构货车");
+		map.put("H29", "中型仓栅式货车");
+		map.put("H31", "轻型普货车");
+		map.put("H32", "轻型厢式货车");
+		map.put("H33", "轻型封闭货车");
+		map.put("H34", "轻型罐式货车");
+		map.put("H35", "轻型平板货车");
+		map.put("H37", "轻型自卸货车");
+		map.put("H38", "轻型特殊结构货车");
+		map.put("H39", "轻仓栅式货车");
+		map.put("H41", "微型普通货车");
+		map.put("H42", "微型厢式货车");
+		map.put("H43", "微型封闭货车");
+		map.put("H44", "微型罐式货车");
+		map.put("H45", "微型自卸货车");
+		map.put("H46", "微型特殊结构货车");
+		map.put("H47", "微型仓栅式货车");
+		map.put("H51", "普通低速货车");
+		map.put("H52", "厢式低速货车");
+		map.put("H53", "罐式低速货车");
+		map.put("H54", "自卸低速货车");
+		map.put("H55", "仓栅式低速货车");
+		map.put("J11", "轮式装载机械");
+		map.put("J12", "轮式挖掘机械");
+		map.put("J13", "轮式平地机械");
+		map.put("Q11", "重型半挂牵引车");
+		map.put("Q12", "重型全挂牵引车");
+		map.put("Q21", "中型半挂牵引车");
+		map.put("Q22", "中型全挂牵引车");
+		map.put("Q31", "轻型半挂牵引车");
+		map.put("Q32", "轻型全挂牵引车");
+		map.put("T11", "大型轮式拖拉机");
+		map.put("T21", "小型轮式拖拉机");
+		map.put("T22", "手扶拖拉机");
+		map.put("T23", "手扶变形运输机");
+		map.put("X99", "其它");
+		map.put("Z11", "大型专项作业车");
+		map.put("Z21", "中型专项作业车");
+		map.put("Z31", "小型专项作业车");
+		map.put("Z41", "微型专项作业车");
+		map.put("Z51", "重型专项作业车");
+		map.put("Z71", "轻型专项作业车");
+		return map;
+	}
+
+	@Override
+	public List<UseCharater> getUseCharater() throws Exception {
+		List<UseCharater> list = new ArrayList<>();
+		list.add(new UseCharater("A", "非运营"));
+		list.add(new UseCharater("B", "公路客运"));
+		list.add(new UseCharater("C", "公交客运"));
+		list.add(new UseCharater("E", "旅游客运"));
+		list.add(new UseCharater("F", "货运"));
+		list.add(new UseCharater("G", "租赁"));
+		return list;
+	}
+
+	@Override
+	public List<IndexTypeVo> getIndexTypes() throws Exception {
+		List<IndexTypeVo> list = new ArrayList<>();
+		list.add(new IndexTypeVo("ZLZB", "增量指标"));
+		list.add(new IndexTypeVo("GXZB", "更新指标"));
+		list.add(new IndexTypeVo("QTZB", "其他指标"));
+		list.add(new IndexTypeVo("BAZB", "备案车辆指标"));
+		list.add(new IndexTypeVo("ESCLZB", "二手车辆指标"));
+		list.add(new IndexTypeVo("ESCZZZB", "二手车周转指标"));
+		list.add(new IndexTypeVo("WZB", "无指标"));
+		return list;
 	}
 	
 }

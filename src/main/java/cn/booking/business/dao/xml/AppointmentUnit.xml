@@ -18,7 +18,7 @@
 		id,appointment_unit_id,name,code,description,pointx,pointy
 	</sql>
 	
-	<insert id="addBatch" parameterMap="parameterAppointmentUnit" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="addBatch" parameterMap="parameterAppointmentUnit">
 		insert into t_appointment_unit (
 			appointment_unit_id,name,code,description,pointx,pointy
 		)

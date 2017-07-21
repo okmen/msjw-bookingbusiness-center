@@ -14,7 +14,7 @@
 		code,name,create_date
 	</sql>
 	
-	<insert id="addBatch" parameterMap="parameteVehicleNodel" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="addBatch" parameterMap="parameteVehicleNodel"  >
 		insert into t_use_nature(
 			code,name,create_date
 		)

@@ -14,7 +14,7 @@
 		code,name,create_date
 	</sql>
 	
-	<insert id="addBatch" parameterMap="parameteUseNature" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="addBatch" parameterMap="parameteUseNature">
 		insert into t_use_nature(
 			code,name,create_date
 		)
