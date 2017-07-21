@@ -98,13 +98,13 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		if(StringUtils.isNotBlank(json)){
 			carTypeVOs = JSON.parseArray(json, CarTypeVO.class);
 			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
-			/*try {
+			try {
 				if(bilinThreadPool != null) {
 					bilinThreadPool.execute(new CacheTask(carTypeVOs,iBookingBusinessCached));
 				}
 			}catch(Exception e){
 				logger.error("存储到缓存 错误", e);
-			}*/
+			}
 		}else{
 			List<CarTypeVO> carTypeVOs2 = TransferThirdParty.getCarTypes(iBookingBusinessCached);
 			List<CarTypePo> carTypePos = new ArrayList<CarTypePo>();
@@ -208,6 +208,9 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		String json = idCardTypeCached.getIIdCardTypeByKey(ICacheKey.IIdCardTypeCached + businessTypeId);
 		if(StringUtils.isNotBlank(json)){
 			idTypeVos = JSON.parseArray(json, IdTypeVO.class);
+			for(IdTypeVO idTypeVO : idTypeVos){
+				idTypeVO.setId(idTypeVO.getIdcardTypeId());
+			}
 			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
 		}else{
 			String jkId = "JK06";
