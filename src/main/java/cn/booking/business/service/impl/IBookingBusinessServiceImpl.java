@@ -119,7 +119,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			}
 			carTypeDao.addBatch(carTypePos);
 			//存redis
-			iCarTypeCached.setICarType(ICacheKey.ICarTypeCached, JSON.toJSONString(carTypeVOs));
+			iCarTypeCached.setICarType(ICacheKey.ICarTypeCached, JSON.toJSONString(carTypePos));
 			/*String jkId = "JK07";
 			JSONObject jsonObject = new JSONObject();
 			try {
