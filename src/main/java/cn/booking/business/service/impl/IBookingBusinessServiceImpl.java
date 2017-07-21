@@ -100,15 +100,15 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
 			try {
 				if(bilinThreadPool != null) {
-					bilinThreadPool.execute(new CacheTask(carTypeVOs));
+					bilinThreadPool.execute(new CacheTask(carTypeVOs,iBookingBusinessCached));
 				}
 			}catch(Exception e){
 				logger.error("存储到缓存 错误", e);
 			}
 		}else{
-			List<CarTypeVO> carTypeVOs2 = TransferThirdParty.getCarTypes();
+			List<CarTypeVO> carTypeVOs2 = TransferThirdParty.getCarTypes(iBookingBusinessCached);
 			List<CarTypePo> carTypePos = new ArrayList<CarTypePo>();
-			for(CarTypeVO carTypeVO2 : carTypeVOs){
+			for(CarTypeVO carTypeVO2 : carTypeVOs2){
 				CarTypePo carTypePo = new CarTypePo();
 				carTypePo.setCarTypeId(carTypeVO2.getId());
 				carTypePo.setCode(carTypeVO2.getCode());
@@ -157,7 +157,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	public List<BusinessTypeVO> getBusinessTypes(String type, String part, String arg0, String arg1) throws Exception {
 		//先查询缓存，没有则查询数据库，没有则调用接口，存 数据库，存缓存
 		List<BusinessTypeVO> businessTypeVOs = null;
-		String json = iBusinessTypeCached.getIBusinessTypeByKey(ICacheKey.IusinessTypeCached);
+		String json = iBusinessTypeCached.getIBusinessTypeByKey(ICacheKey.IusinessTypeCached + type);
 		if(StringUtils.isNotBlank(json)){
 			businessTypeVOs = JSON.parseArray(json, BusinessTypeVO.class);
 			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
@@ -193,7 +193,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 					businessTypePos.add(businessTypePo);
 				}
 				businessTypeDao.addBatch(businessTypePos);
-				iBusinessTypeCached.setIBusinessType(ICacheKey.IusinessTypeCached, JSON.toJSONString(businessTypeVOs));
+				iBusinessTypeCached.setIBusinessType(ICacheKey.IusinessTypeCached + type, JSON.toJSONString(businessTypeVOs));
 			} catch (Exception e) {
 				logger.error("getBusinessTypes 失败 ， map = " + map);
 				throw e;
@@ -205,8 +205,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Override
 	public List<IdTypeVO> getIdTypes(String businessTypeId, String arg0, String arg1) throws Exception {
 		List<IdTypeVO> idTypeVos = null;
-		String json = idCardTypeCached.getIIdCardTypeByKey(ICacheKey.IIdCardTypeCached);
-		if(json.equals("====")){
+		String json = idCardTypeCached.getIIdCardTypeByKey(ICacheKey.IIdCardTypeCached + businessTypeId);
+		if(StringUtils.isNotBlank(json)){
 			idTypeVos = JSON.parseArray(json, IdTypeVO.class);
 			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
 		}else{
@@ -241,7 +241,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 					idCardTypePos.add(idCardTypePo);
 				}
 				iIdCardTypeDao.addBatch(idCardTypePos);
-				idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached, JSON.toJSONString(idCardTypePos));
+				idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached + businessTypeId, JSON.toJSONString(idCardTypePos));
 			} catch (Exception e) {
 				logger.error("getCarTypes 失败 ， map = " + map);
 				throw e;

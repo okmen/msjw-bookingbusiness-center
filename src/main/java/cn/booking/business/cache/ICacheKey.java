@@ -13,9 +13,9 @@ public interface ICacheKey {
 	public static String ACCOUNT_DOC = "ACCOUNT_DOC_"; //须知
 	
 	
-	public static String ICarTypeCached = "szjj_bookingbusiness_ICarTypeCached";
-	public static String IIdCardTypeCached = "szjj_bookingbusiness_IIdCardTypeCached";
-	public static String IUseNatureCached = "szjj_bookingbusiness_IUseNatureCached";
-	public static String IVehicleNodelCached = "szjj_bookingbusiness_IVehicleNodelCached";
-	public static String IusinessTypeCached = "szjj_bookingbusiness_IusinessTypeCached";
+	public static String ICarTypeCached = "szjj_bookingbusiness_ICarTypeCached_";
+	public static String IIdCardTypeCached = "szjj_bookingbusiness_IIdCardTypeCached_";
+	public static String IUseNatureCached = "szjj_bookingbusiness_IUseNatureCached_";
+	public static String IVehicleNodelCached = "szjj_bookingbusiness_IVehicleNodelCached_";
+	public static String IusinessTypeCached = "szjj_bookingbusiness_IusinessTypeCached_";
 }

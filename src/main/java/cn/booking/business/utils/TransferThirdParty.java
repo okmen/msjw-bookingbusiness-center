@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import cn.booking.business.bean.CarTypePo;
 import cn.booking.business.bean.CarTypeVO;
+import cn.booking.business.cache.IBookingBusinessCached;
 import cn.booking.business.cache.ICacheKey;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
 import cn.sdk.webservice.WebServiceClient;
@@ -25,10 +26,8 @@ import cn.sdk.webservice.WebServiceClient;
 @SuppressWarnings(value="all")
 public class TransferThirdParty {
 	private static Logger logger = Logger.getLogger(TransferThirdParty.class);
-	@Autowired
-	private static IBookingBusinessCachedImpl iBookingBusinessCached;
 	
-	public static List<CarTypeVO> getCarTypes() throws Exception {
+	public static List<CarTypeVO> getCarTypes(IBookingBusinessCachedImpl iBookingBusinessCached) throws Exception {
 		List<CarTypeVO> carTypeVOs = null;
 		String jkId = "JK07";
 		JSONObject jsonObject = new JSONObject();
