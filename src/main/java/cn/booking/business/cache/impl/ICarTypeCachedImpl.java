@@ -26,7 +26,8 @@ public class ICarTypeCachedImpl implements ICarTypeCached {
 
 	@Override
 	public boolean setICarType(String key, String value) {
-		return cacheManger.set(key, value);
+		//15天=1296000秒
+		return cacheManger.set(key, value, 1296000);
 	}
 	
 }

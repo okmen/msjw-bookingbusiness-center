@@ -107,6 +107,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			}
 		}else{
 			List<CarTypeVO> carTypeVOs2 = TransferThirdParty.getCarTypes(iBookingBusinessCached);
+			carTypeVOs = carTypeVOs2;
 			List<CarTypePo> carTypePos = new ArrayList<CarTypePo>();
 			for(CarTypeVO carTypeVO2 : carTypeVOs2){
 				CarTypePo carTypePo = new CarTypePo();
