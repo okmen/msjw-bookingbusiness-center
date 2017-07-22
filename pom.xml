@@ -162,7 +162,9 @@
 				<jiaojing.key>94D863D9BE7FB032E6A19430CC892610</jiaojing.key>
 				
 				<!-- 车管所 -->
-				<stcUrl>http://app.stc.gov.cn:8092/book/services/wsBookUniformService</stcUrl>
+				
+				<stcUrl>https://szjjapi.chudaokeji.com/book/services/wsBookUniformService</stcUrl>
+<!-- 				<stcUrl>http://app.stc.gov.cn:8092/book/services/wsBookUniformService</stcUrl> -->
 				<cgsaccount>cdkjcs</cgsaccount>
 				<cgspassword>4028823f5cec9613015d07046034729c</cgspassword>
 				
@@ -222,7 +224,7 @@
 				<jiaojing.key>94D863D9BE7FB032E6A19430CC892610</jiaojing.key>
 
 				<!-- 车管所 -->
-				<stcUrl>http://app.stc.gov.cn:8092/book/services/wsBookUniformService</stcUrl>
+				<stcUrl>https://szjjapi.chudaokeji.com/book/services/wsBookUniformService</stcUrl>
 				<cgsaccount>cdkjcs</cgsaccount>
 				<cgspassword>4028823f5cec9613015d07046034729c</cgspassword>
 				
