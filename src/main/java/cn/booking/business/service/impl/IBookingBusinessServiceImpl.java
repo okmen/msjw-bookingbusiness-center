@@ -97,6 +97,9 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
 		if(StringUtils.isNotBlank(json)){
 			carTypeVOs = JSON.parseArray(json, CarTypeVO.class);
+			for(CarTypeVO carTypeVO : carTypeVOs){
+				carTypeVO.setId(carTypeVO.getCarTypeId());
+			}
 			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
 			/*try {
 				if(bilinThreadPool != null) {
