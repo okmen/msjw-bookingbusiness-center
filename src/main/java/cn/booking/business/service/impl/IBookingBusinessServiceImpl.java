@@ -93,6 +93,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	
 	public List<CarTypeVO> getCarTypes() throws Exception {
 		List<CarTypeVO> carTypeVOs = null;
+
 		String json = iCarTypeCached.getICarTypeByKey(ICacheKey.ICarTypeCached);
 		//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
 		if(StringUtils.isNotBlank(json)){
