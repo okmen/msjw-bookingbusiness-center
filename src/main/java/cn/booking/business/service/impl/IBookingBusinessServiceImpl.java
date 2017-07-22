@@ -98,13 +98,13 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		if(StringUtils.isNotBlank(json)){
 			carTypeVOs = JSON.parseArray(json, CarTypeVO.class);
 			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
-			try {
+			/*try {
 				if(bilinThreadPool != null) {
 					bilinThreadPool.execute(new CacheTask(carTypeVOs,iBookingBusinessCached));
 				}
 			}catch(Exception e){
 				logger.error("存储到缓存 错误", e);
-			}
+			}*/
 		}else{
 			List<CarTypeVO> carTypeVOs2 = TransferThirdParty.getCarTypes(iBookingBusinessCached);
 			carTypeVOs = carTypeVOs2;
