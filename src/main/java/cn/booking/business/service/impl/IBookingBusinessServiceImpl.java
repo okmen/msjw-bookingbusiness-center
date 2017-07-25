@@ -1037,5 +1037,12 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		list.add(new IndexTypeVo("WZB", "无指标"));
 		return list;
 	}
+
+	@Override
+	public String getTemplateSendUrl() {
+		String url = iBookingBusinessCached.getTemplateSendUrl() + "?";
+		logger.info("获取到的域名地址是：" + url);
+		return url;
+	}
 	
 }
