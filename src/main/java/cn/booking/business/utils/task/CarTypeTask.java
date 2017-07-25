@@ -1,4 +1,4 @@
-package cn.booking.business.utils;
+package cn.booking.business.utils.task;
 
 import java.io.Serializable;
 import java.util.List;
@@ -7,25 +7,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.booking.business.bean.CarTypeVO;
-import cn.booking.business.cache.IBookingBusinessCached;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
+import cn.booking.business.utils.execute.CarTypeExecute;
 
-@SuppressWarnings(value="all")
-public class CacheTask implements Runnable,Serializable {
-	protected static Logger logger = LoggerFactory.getLogger(CacheTask.class);
+public class CarTypeTask implements Runnable,Serializable {
+	protected static Logger logger = LoggerFactory.getLogger(CarTypeTask.class);
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private CacheTaskExecute cacheTaskExecute;
+	private CarTypeExecute carTypeExecute;
 	
 	private IBookingBusinessCachedImpl iBookingBusinessCached;
 	
 	private List<CarTypeVO> carTypeVOs;
 	
 	
-	public CacheTask(List<CarTypeVO> carTypeVOs,IBookingBusinessCachedImpl iBookingBusinessCached) {
+	public CarTypeTask(CarTypeExecute carTypeExecute,List<CarTypeVO> carTypeVOs,IBookingBusinessCachedImpl iBookingBusinessCached) {
+		this.carTypeExecute = carTypeExecute;
 		this.carTypeVOs = carTypeVOs;
 		this.iBookingBusinessCached = iBookingBusinessCached;
 	}
@@ -33,7 +33,7 @@ public class CacheTask implements Runnable,Serializable {
 	@Override
 	public void run() {
 		try {
-			CacheTaskExecute.cacheCarType(carTypeVOs,iBookingBusinessCached);
+			carTypeExecute.execute(carTypeVOs,iBookingBusinessCached);
 		} catch (Exception e) {
 			logger.error("异步执行错误",e);
 		}

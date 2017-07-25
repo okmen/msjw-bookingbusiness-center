@@ -9,7 +9,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.booking.business.bean.AppTimeHelper;
+import cn.booking.business.bean.AppointmentPo;
+import cn.booking.business.bean.AppointmentUnitPo;
 import cn.booking.business.bean.BusinessTypePo;
 import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypePo;
@@ -35,21 +36,30 @@ import cn.booking.business.bean.UseCharater;
 import cn.booking.business.bean.UseNaturePo;
 import cn.booking.business.bean.VehicleInfoVO;
 import cn.booking.business.bean.VehicleNodelPo;
+import cn.booking.business.cache.AppointmentCached;
+import cn.booking.business.cache.AppointmentUnitCached;
 import cn.booking.business.cache.IBusinessTypeCached;
 import cn.booking.business.cache.ICacheKey;
 import cn.booking.business.cache.ICarTypeCached;
 import cn.booking.business.cache.IIdCardTypeCached;
 import cn.booking.business.cache.impl.IBookingBusinessCachedImpl;
+import cn.booking.business.dao.AppointmentDao;
+import cn.booking.business.dao.AppointmentUnitDao;
 import cn.booking.business.dao.BusinessTypeDao;
 import cn.booking.business.dao.ICarTypeDao;
 import cn.booking.business.dao.IIdCardTypeDao;
 import cn.booking.business.dao.IUseNatureDao;
 import cn.booking.business.dao.IVehicleNodelDao;
-import cn.booking.business.dao.impl.IdCardTypeDaoImpl;
 import cn.booking.business.service.IBookingBusinessService;
-import cn.booking.business.utils.CacheTask;
-import cn.booking.business.utils.CacheTaskExecute;
 import cn.booking.business.utils.TransferThirdParty;
+import cn.booking.business.utils.execute.AppointmentExecute;
+import cn.booking.business.utils.execute.AppointmentUnitExecute;
+import cn.booking.business.utils.execute.CarTypeExecute;
+import cn.booking.business.utils.execute.IdCardTypeExecute;
+import cn.booking.business.utils.task.AppointmentTask;
+import cn.booking.business.utils.task.AppointmentUnitTask;
+import cn.booking.business.utils.task.CarTypeTask;
+import cn.booking.business.utils.task.IdCardTypeTask;
 import cn.sdk.bean.BaseBean;
 import cn.sdk.thread.BilinThreadPool;
 import cn.sdk.util.MsgCode;
@@ -76,24 +86,43 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Autowired
 	private BusinessTypeDao businessTypeDao;
 	@Autowired
+	private AppointmentDao appointmentDao;
+	@Autowired
+	private AppointmentUnitDao appointmentUnitDao;
+	@Autowired
 	private ICarTypeCached iCarTypeCached;
 	@Autowired
 	private IBusinessTypeCached iBusinessTypeCached;
 	@Autowired
 	private IIdCardTypeCached idCardTypeCached;
+	@Autowired
+	private AppointmentCached appointmentCached;
+	@Autowired
+	private AppointmentUnitCached appointmentUnitCached;
 	
 	@Autowired
 	@Qualifier("bilinThreadPool")
 	private BilinThreadPool bilinThreadPool;
     
     @Autowired
-    @Qualifier("cacheTaskExecute")
-    private CacheTaskExecute cacheTaskExecute;
+    @Qualifier("idCardTypeExecute")
+    private IdCardTypeExecute idCardTypeExecute;
+    
+    @Autowired
+    @Qualifier("appointmentExecute")
+    private AppointmentExecute appointmentExecute;
+    
+    @Autowired
+    @Qualifier("appointmentUnitExecute")
+    private AppointmentUnitExecute appointmentUnitExecute;
+    
+    @Autowired
+    @Qualifier("carTypeExecute")
+    private CarTypeExecute carTypeExecute;
     
 	
 	public List<CarTypeVO> getCarTypes() throws Exception {
 		List<CarTypeVO> carTypeVOs = null;
-
 		String json = iCarTypeCached.getICarTypeByKey(ICacheKey.ICarTypeCached);
 		//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
 		if(StringUtils.isNotBlank(json)){
@@ -102,13 +131,13 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				carTypeVO.setId(carTypeVO.getCarTypeId());
 			}
 			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
-			/*try {
+			try {
 				if(bilinThreadPool != null) {
-					bilinThreadPool.execute(new CacheTask(carTypeVOs,iBookingBusinessCached));
+					bilinThreadPool.execute(new CarTypeTask(carTypeExecute, carTypeVOs, iBookingBusinessCached));
 				}
 			}catch(Exception e){
 				logger.error("存储到缓存 错误", e);
-			}*/
+			}
 		}else{
 			List<CarTypeVO> carTypeVOs2 = TransferThirdParty.getCarTypes(iBookingBusinessCached);
 			carTypeVOs = carTypeVOs2;
@@ -123,37 +152,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				carTypePos.add(carTypePo);
 			}
 			carTypeDao.addBatch(carTypePos);
-			//存redis
 			iCarTypeCached.setICarType(ICacheKey.ICarTypeCached, JSON.toJSONString(carTypePos));
-			/*String jkId = "JK07";
-			JSONObject jsonObject = new JSONObject();
-			try {
-				String url = iBookingBusinessCached.getStcUrl();
-				String account = iBookingBusinessCached.getCgsaccount();
-				String password = iBookingBusinessCached.getCgspassword();
-				String data = "<root></root>";
-				jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
-				JSONObject result = jsonObject.getJSONObject("result");
-				String carTypeVO = result.getString("CarTypeVO");
-				carTypeVOs = JSON.parseArray(carTypeVO, CarTypeVO.class);
-				//存mysql
-				List<CarTypePo> carTypePos = new ArrayList<CarTypePo>();
-				for(CarTypeVO carTypeVO2 : carTypeVOs){
-					CarTypePo carTypePo = new CarTypePo();
-					carTypePo.setCarTypeId(carTypeVO2.getId());
-					carTypePo.setCode(carTypeVO2.getCode());
-					carTypePo.setCreateDate(new Date());
-					carTypePo.setDescription(carTypeVO2.getDescription());
-					carTypePo.setName(carTypeVO2.getName());
-					carTypePos.add(carTypePo);
-				}
-				carTypeDao.addBatch(carTypePos);
-				//存redis
-				iCarTypeCached.setICarType(ICacheKey.ICarTypeCached, JSON.toJSONString(carTypeVOs));
-			} catch (Exception e) {
-				logger.error("getCarTypes 失败",e);
-				throw e;
-			}*/
 		}
 		return carTypeVOs;
 	}
@@ -216,44 +215,29 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			for(IdTypeVO idTypeVO : idTypeVos){
 				idTypeVO.setId(idTypeVO.getIdcardTypeId());
 			}
-			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
-		}else{
-			String jkId = "JK06";
-			LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-			map.put("businessTypeId", businessTypeId);
-			map.put("arg0", null == arg0 ? "" : arg0);
-			map.put("arg1", null == arg1 ? "" : arg1);
-			JSONObject jsonObject = new JSONObject();
+			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
 			try {
-				String url = iBookingBusinessCached.getStcUrl();
-				String account = iBookingBusinessCached.getCgsaccount();
-				String password = iBookingBusinessCached.getCgspassword();
-				StringBuffer str=new StringBuffer();
-				str.append("<root>");
-				str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>");
-				str.append("</root>");
-				jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
-				JSONObject result = jsonObject.getJSONObject("result");
-				String IdTypeVO = result.getString("IdTypeVO");
-				idTypeVos = JSON.parseArray(IdTypeVO, IdTypeVO.class);
-				
-				//存mysql
-				List<IdCardTypePo> idCardTypePos = new ArrayList<IdCardTypePo>();
-				for(IdTypeVO idTypeVO2 : idTypeVos){
-					IdCardTypePo idCardTypePo = new IdCardTypePo();
-					idCardTypePo.setCode(idTypeVO2.getCode());
-					idCardTypePo.setCreateDate(new Date());
-					idCardTypePo.setDescription(idTypeVO2.getDescription());
-					idCardTypePo.setIdcardTypeId(idTypeVO2.getId());
-					idCardTypePo.setName(idTypeVO2.getName());
-					idCardTypePos.add(idCardTypePo);
+				if(bilinThreadPool != null) {
+					bilinThreadPool.execute(new IdCardTypeTask(idCardTypeExecute, idTypeVos, iBookingBusinessCached,businessTypeId));
 				}
-				iIdCardTypeDao.addBatch(idCardTypePos);
-				idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached + businessTypeId, JSON.toJSONString(idCardTypePos));
-			} catch (Exception e) {
-				logger.error("getCarTypes 失败 ， map = " + map);
-				throw e;
+			}catch(Exception e){
+				logger.error("存储到缓存 错误", e);
 			}
+		}else{
+			idTypeVos = TransferThirdParty.getIdTypes(iBookingBusinessCached, businessTypeId, arg0, arg1);
+			//存mysql
+			List<IdCardTypePo> idCardTypePos = new ArrayList<IdCardTypePo>();
+			for(IdTypeVO idTypeVO2 : idTypeVos){
+				IdCardTypePo idCardTypePo = new IdCardTypePo();
+				idCardTypePo.setCode(idTypeVO2.getCode());
+				idCardTypePo.setCreateDate(new Date());
+				idCardTypePo.setDescription(idTypeVO2.getDescription());
+				idCardTypePo.setIdcardTypeId(idTypeVO2.getId());
+				idCardTypePo.setName(idTypeVO2.getName());
+				idCardTypePos.add(idCardTypePo);
+			}
+			iIdCardTypeDao.addBatch(idCardTypePos);
+			idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached + businessTypeId, JSON.toJSONString(idCardTypePos));
 		}
 		return idTypeVos;
 	}
@@ -293,35 +277,45 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 	@Override
 	public List<OrgVO> getOrgsByBusinessTypeId(String btId, String arg0, String arg1) throws Exception {
-		String jkId = "JK05";
+		String key = ICacheKey.AppointmentUnitCached + btId;
 		List<OrgVO> orgVOs = new ArrayList<OrgVO>();
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("btId", btId);
-		map.put("arg0", null == arg0 ? "" : arg0);
-		map.put("arg1", null == arg1 ? "" : arg1);
-		JSONObject jsonObject = new JSONObject();
-		try {
-			String url = iBookingBusinessCached.getStcUrl();
-			String account = iBookingBusinessCached.getCgsaccount();
-			String password = iBookingBusinessCached.getCgspassword();
-			StringBuffer str=new StringBuffer();
-			str.append("<root>");
-			str.append("<btId>").append(btId).append("</btId>");
-			str.append("</root>");
-			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
-			String code = jsonObject.getString("code");
-			String msg = jsonObject.getString("msg");
-			JSONObject result = jsonObject.getJSONObject("result");
-			String OrgVO = result.getString("OrgVO");
-			try{
-			orgVOs = JSON.parseArray(OrgVO, OrgVO.class);
-			}catch (Exception e) {
-				OrgVO vo=JSON.parseObject(OrgVO, OrgVO.class);
-				orgVOs.add(vo);
+		String json = appointmentUnitCached.getAppointmentUnitByKey(key);
+		if(StringUtils.isNotBlank(json)){
+			List<AppointmentUnitPo> appointmentUnitPos = JSON.parseArray(json, AppointmentUnitPo.class);
+			for(AppointmentUnitPo appointmentUnitPo : appointmentUnitPos){
+				OrgVO orgVO = new OrgVO();
+				orgVO.setCode(appointmentUnitPo.getCode());
+				orgVO.setDescription(appointmentUnitPo.getDescription());
+				orgVO.setId(appointmentUnitPo.getAppointmentUnitId());
+				orgVO.setName(appointmentUnitPo.getName());
+				orgVO.setPointx(appointmentUnitPo.getPointx());
+				orgVO.setPointy(appointmentUnitPo.getPointy());
+				orgVOs.add(orgVO);
 			}
-		} catch (Exception e) {
-			logger.error("getOrgsByBusinessTypeId 失败 ， btId = " + btId + ", arg0=" + arg0 + ",arg1=" + arg1);
-			throw e;
+			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
+			try {
+				if(bilinThreadPool != null) {
+					bilinThreadPool.execute(new AppointmentUnitTask(appointmentUnitExecute, appointmentUnitPos, iBookingBusinessCached,btId));
+				}
+			}catch(Exception e){
+				logger.error("存储到缓存 错误", e);
+			}
+		}else{
+			orgVOs = TransferThirdParty.getOrgsByBusinessTypeId(iBookingBusinessCached, btId, arg0, arg1);
+			List<AppointmentUnitPo> appointmentUnitPos = new ArrayList<AppointmentUnitPo>();
+			for(OrgVO orgVO : orgVOs){
+				AppointmentUnitPo appointmentUnitPo = new AppointmentUnitPo();
+				appointmentUnitPo.setAppointmentUnitId(orgVO.getId());
+				appointmentUnitPo.setCode(orgVO.getCode());
+				appointmentUnitPo.setDescription(orgVO.getDescription());
+				appointmentUnitPo.setName(orgVO.getName());
+				appointmentUnitPo.setPointx(orgVO.getPointx());
+				appointmentUnitPo.setPointy(orgVO.getPointy());
+				appointmentUnitPos.add(appointmentUnitPo);
+			}
+			appointmentUnitDao.addBatch(appointmentUnitPos);
+			//存redis
+			appointmentUnitCached.setAppointmentUnit(key, JSON.toJSONString(appointmentUnitPos));
 		}
 		return orgVOs;
 	}
@@ -382,37 +376,38 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Override
 	public List<String> getAppointmentDate(String orgId, String businessTypeId, String arg0, String arg1)
 			throws Exception {
-		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-		map.put("orgId", orgId);
-		map.put("businessTypeId", businessTypeId);
-		map.put("arg0", null == arg0 ? "" : arg0);
-		map.put("arg1", null == arg1 ? "" : arg1);
-		List<String> dateTime = new ArrayList<String>();
-		String jkId = "JK09";
-		JSONObject jsonObject = new JSONObject();
-		try {
-			String url = iBookingBusinessCached.getStcUrl();
-			String account = iBookingBusinessCached.getCgsaccount();
-			String password = iBookingBusinessCached.getCgspassword();
-			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
-			StringBuffer str=new StringBuffer();
-			str.append("<root><orgId>").append(orgId).append("</orgId>");
-			str.append("<businessTypeId>").append(businessTypeId).append("</businessTypeId>").append("</root>");
-			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
-			logger.info("请求报文："+str.toString());
-			String code = jsonObject.getString("code");
-			String msg = jsonObject.getString("msg");
-			JSONObject result = jsonObject.getJSONObject("result");
-			if ("00".equals(code)) {
-				String date = result.getString("string");
-				dateTime = JSON.parseArray(date, String.class);
-			} else {
+		List<String> dateStr = null;
+		String key = ICacheKey.AppointmentCached + orgId + "_" + businessTypeId;
+		List<AppointmentPo> appointmentPos = new ArrayList<AppointmentPo>();
+		String json = appointmentCached.getAppointmentByKey(key);
+		//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
+		if(StringUtils.isNotBlank(json)){
+			appointmentPos = JSON.parseArray(json, AppointmentPo.class);
+			dateStr = new ArrayList<String>();
+			for(AppointmentPo appointmentPo : appointmentPos){
+				dateStr.add(appointmentPo.getAppointment());
 			}
-		} catch (Exception e) {
-			logger.error("getAppointmentDate 失败 ， map = " + map);
-			throw e;
+			//从缓存中取出，异步操作(调用第三方，比较缓存中数据,有变动则更新到mysql和redis)
+			try {
+				if(bilinThreadPool != null) {
+					bilinThreadPool.execute(new AppointmentTask(appointmentExecute,appointmentPos, iBookingBusinessCached, orgId, businessTypeId));
+				}
+			}catch(Exception e){
+				logger.error("存储到缓存 错误", e);
+			}
+		}else{
+			List<String> strings = TransferThirdParty.getAppointmentDate(iBookingBusinessCached, orgId, businessTypeId, arg0, arg1);
+			for(String string : strings){
+				AppointmentPo appointmentPo = new AppointmentPo(string, new Date());
+				appointmentPos.add(appointmentPo);
+			}
+			//存mysql
+			appointmentDao.addBatch(appointmentPos);
+			//存redis
+			appointmentCached.setAppointment(key, JSON.toJSONString(appointmentPos));
+			dateStr = strings;
 		}
-		return dateTime;
+		return dateStr;
 	}
 
 	/**

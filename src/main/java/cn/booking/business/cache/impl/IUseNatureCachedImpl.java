@@ -16,18 +16,12 @@ public class IUseNatureCachedImpl implements IUseNatureCached {
 	@Qualifier("jedisCacheManagerImpl")
 	private ICacheManger<String> cacheManger;
 	
-	@Autowired
-	@Qualifier("jedisCacheManagerImpl")
-	private ICacheManger<Object> objectcacheManger;
-	
 	@Override
 	public String getIUseNatureByKey(String key) {
 		return cacheManger.get(key);
 	}
-
 	@Override
 	public boolean setIUseNatureType(String key, String value) {
 		return cacheManger.set(key, value);
 	}
-	
 }

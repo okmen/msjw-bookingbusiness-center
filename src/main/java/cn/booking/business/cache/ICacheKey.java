@@ -18,4 +18,8 @@ public interface ICacheKey {
 	public static String IUseNatureCached = "szjj_bookingbusiness_IUseNatureCached_";
 	public static String IVehicleNodelCached = "szjj_bookingbusiness_IVehicleNodelCached_";
 	public static String IusinessTypeCached = "szjj_bookingbusiness_IusinessTypeCached_";
+	public static String AppointmentCached = "szjj_bookingbusiness_AppointmentCached_";
+	public static String AppointmentUnitCached = "szjj_bookingbusiness_AppointmentUnitCached_";
+	
+	
 }

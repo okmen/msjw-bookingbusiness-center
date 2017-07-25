@@ -3,8 +3,7 @@ package cn.booking.business.cache.impl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import com.alibaba.dubbo.config.annotation.Service;
+import org.springframework.stereotype.Service;
 
 import cn.booking.business.cache.AppointmentUnitCached;
 import cn.sdk.cache.ICacheManger;
@@ -16,10 +15,6 @@ public class AppointmentUnitCachedImpl implements AppointmentUnitCached {
 	@Autowired
 	@Qualifier("jedisCacheManagerImpl")
 	private ICacheManger<String> cacheManger;
-	
-	@Autowired
-	@Qualifier("jedisCacheManagerImpl")
-	private ICacheManger<Object> objectcacheManger;
 	
 	@Override
 	public String getAppointmentUnitByKey(String key) {

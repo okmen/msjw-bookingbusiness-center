@@ -15,10 +15,6 @@ public class IVehicleNodelCachedImpl implements IVehicleNodelCached{
 	@Qualifier("jedisCacheManagerImpl")
 	private ICacheManger<String> cacheManger;
 	
-	@Autowired
-	@Qualifier("jedisCacheManagerImpl")
-	private ICacheManger<Object> objectcacheManger;
-	
 	@Override
 	public String getVehicleNodelByKey(String key) {
 		return cacheManger.get(key);

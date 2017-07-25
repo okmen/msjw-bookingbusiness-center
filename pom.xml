@@ -169,7 +169,7 @@
 				<cgspassword>4028823f5cec9613015d07046034729c</cgspassword>
 				
 				<!-- 域名地址 -->
-				<templateSendUrl>http://testh5.chudaokeji.com/h5/#/appointSuccess</templateSendUrl>
+				<templateSendUrl>http://testh5.chudaokeji.com/h5/#/submitSuccess</templateSendUrl>
 			</properties>
 		</profile>
 
@@ -229,7 +229,7 @@
 				<cgspassword>4028823f5cec9613015d07046034729c</cgspassword>
 				
 				<!-- 域名地址 -->
-				<templateSendUrl>http://testh5.chudaokeji.com/h5/#/appointSuccess</templateSendUrl>
+				<templateSendUrl>http://testh5.chudaokeji.com/h5/#/submitSuccess</templateSendUrl>
 			</properties>
 		</profile>
 
@@ -289,7 +289,7 @@
 				<cgspassword>4028823f5cec9613015d07046034729c</cgspassword>
 				
 				<!-- 域名地址 -->
-				<templateSendUrl>http://szjj.u-road.com/h5/#/appointSuccess</templateSendUrl>
+				<templateSendUrl>http://szjj.u-road.com/h5/#/submitSuccess</templateSendUrl>
 				
 			</properties>
 		</profile>

@@ -15,10 +15,6 @@ protected Logger log = Logger.getLogger(this.getClass());
 	@Qualifier("jedisCacheManagerImpl")
 	private ICacheManger<String> cacheManger;
 	
-	@Autowired
-	@Qualifier("jedisCacheManagerImpl")
-	private ICacheManger<Object> objectcacheManger;
-	
 	@Override
 	public String getIBusinessTypeByKey(String key) {
 		return cacheManger.get(key);

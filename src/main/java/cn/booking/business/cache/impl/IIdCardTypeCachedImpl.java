@@ -15,9 +15,6 @@ public class IIdCardTypeCachedImpl implements IIdCardTypeCached {
 	@Qualifier("jedisCacheManagerImpl")
 	private ICacheManger<String> cacheManger;
 	
-	@Autowired
-	@Qualifier("jedisCacheManagerImpl")
-	private ICacheManger<Object> objectcacheManger;
 	
 	@Override
 	public String getIIdCardTypeByKey(String key) {

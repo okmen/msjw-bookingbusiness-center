@@ -24,7 +24,12 @@
 	
 	<bean id="bilinThreadPool" class="cn.sdk.thread.BilinThreadPool" />
 	
-	<bean id="cacheTaskExecute" class="cn.booking.business.utils.CacheTaskExecute" />
+	<bean id="idCardTypeExecute" class="cn.booking.business.utils.execute.IdCardTypeExecute" />
 	
+	<bean id="carTypeExecute" class="cn.booking.business.utils.execute.CarTypeExecute" />
+	
+	<bean id="appointmentExecute" class="cn.booking.business.utils.execute.AppointmentExecute" />
+	
+	<bean id="appointmentUnitExecute" class="cn.booking.business.utils.execute.AppointmentUnitExecute" />
 	
 </beans>

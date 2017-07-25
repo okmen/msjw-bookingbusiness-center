@@ -3,8 +3,7 @@ package cn.booking.business.cache.impl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-
-import com.alibaba.dubbo.config.annotation.Service;
+import org.springframework.stereotype.Service;
 
 import cn.booking.business.cache.AppointmentCached;
 import cn.sdk.cache.ICacheManger;
