@@ -54,10 +54,12 @@ import cn.booking.business.service.IBookingBusinessService;
 import cn.booking.business.utils.TransferThirdParty;
 import cn.booking.business.utils.execute.AppointmentExecute;
 import cn.booking.business.utils.execute.AppointmentUnitExecute;
+import cn.booking.business.utils.execute.BusinessTypeExecute;
 import cn.booking.business.utils.execute.CarTypeExecute;
 import cn.booking.business.utils.execute.IdCardTypeExecute;
 import cn.booking.business.utils.task.AppointmentTask;
 import cn.booking.business.utils.task.AppointmentUnitTask;
+import cn.booking.business.utils.task.BusinessTypeTask;
 import cn.booking.business.utils.task.CarTypeTask;
 import cn.booking.business.utils.task.IdCardTypeTask;
 import cn.sdk.bean.BaseBean;
@@ -99,6 +101,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	private AppointmentCached appointmentCached;
 	@Autowired
 	private AppointmentUnitCached appointmentUnitCached;
+	@Autowired
+	private BusinessTypeExecute businessTypeExecute;
 	
 	@Autowired
 	@Qualifier("bilinThreadPool")
@@ -160,48 +164,40 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Override
 	public List<BusinessTypeVO> getBusinessTypes(String type, String part, String arg0, String arg1) throws Exception {
 		//先查询缓存，没有则查询数据库，没有则调用接口，存 数据库，存缓存
-		List<BusinessTypeVO> businessTypeVOs = null;
-		String json = iBusinessTypeCached.getIBusinessTypeByKey(ICacheKey.IusinessTypeCached + type);
+		List<BusinessTypeVO> businessTypeVOs = new ArrayList<BusinessTypeVO>();
+		String json = iBusinessTypeCached.getIBusinessTypeByKey(ICacheKey.IBusinessTypeCached + type);
 		if(StringUtils.isNotBlank(json)){
-			businessTypeVOs = JSON.parseArray(json, BusinessTypeVO.class);
-			//异步调用第三方接口比较缓存中的数据，如果有变化则更新到数据库和缓存，没有变化则直接返回
-		}else{
-			String jkId = "JK04";
-			LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-			map.put("type", type);
-			map.put("part", part);
-			map.put("arg0", null == arg0 ? "" : arg0);
-			map.put("arg1", null == arg1 ? "" : arg1);
-			JSONObject jsonObject = new JSONObject();
-			try {
-				String url = iBookingBusinessCached.getStcUrl();
-				String account = iBookingBusinessCached.getCgsaccount();
-				String password = iBookingBusinessCached.getCgspassword();
-				StringBuffer str=new StringBuffer();
-				str.append("<root><type>").append(type).append("</type>");
-				str.append("<part>").append(part).append("</part>").append("</root>");
-				jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
-				JSONObject result = jsonObject.getJSONObject("result");
-				String BusinessTypeVO = result.getString("BusinessTypeVO");
-				businessTypeVOs = JSON.parseArray(BusinessTypeVO, BusinessTypeVO.class);
-				
-				//存mysql
-				List<BusinessTypePo> businessTypePos = new ArrayList<BusinessTypePo>();
-				for(BusinessTypeVO businessTypeVO2 : businessTypeVOs){
-					BusinessTypePo businessTypePo = new BusinessTypePo();
-					businessTypePo.setBusinessId(businessTypeVO2.getId());
-					businessTypePo.setCode(businessTypeVO2.getCode());
-					businessTypePo.setDescription(businessTypeVO2.getDescription());
-					businessTypePo.setLx(businessTypeVO2.getLx());
-					businessTypePo.setName(businessTypeVO2.getName());
-					businessTypePos.add(businessTypePo);
-				}
-				businessTypeDao.addBatch(businessTypePos);
-				iBusinessTypeCached.setIBusinessType(ICacheKey.IusinessTypeCached + type, JSON.toJSONString(businessTypeVOs));
-			} catch (Exception e) {
-				logger.error("getBusinessTypes 失败 ， map = " + map);
-				throw e;
+			List<BusinessTypePo> businessTypePos = JSON.parseArray(json, BusinessTypePo.class);
+			for(BusinessTypePo businessTypePo : businessTypePos){
+				BusinessTypeVO businessTypeVO2 = new BusinessTypeVO();
+				businessTypeVO2.setId(businessTypePo.getBusinessId());
+				businessTypeVO2.setCode(businessTypePo.getCode());
+				businessTypeVO2.setDescription(businessTypePo.getDescription());
+				businessTypeVO2.setLx(businessTypePo.getLx());
+				businessTypeVO2.setName(businessTypePo.getName());
+				businessTypeVOs.add(businessTypeVO2);
 			}
+			try {
+				if(bilinThreadPool != null) {
+					bilinThreadPool.execute(new BusinessTypeTask(businessTypeExecute, businessTypeVOs, iBookingBusinessCached, type));
+				}
+			}catch(Exception e){
+				logger.error("存储到缓存 错误", e);
+			}
+		}else{
+			businessTypeVOs = TransferThirdParty.getBusinessTypes(iBookingBusinessCached, type, part, arg0, arg1);
+			List<BusinessTypePo> businessTypePos = new ArrayList<BusinessTypePo>();
+			for(BusinessTypeVO businessTypeVO2 : businessTypeVOs){
+				BusinessTypePo businessTypePo = new BusinessTypePo();
+				businessTypePo.setBusinessId(businessTypeVO2.getId());
+				businessTypePo.setCode(businessTypeVO2.getCode());
+				businessTypePo.setDescription(businessTypeVO2.getDescription());
+				businessTypePo.setLx(businessTypeVO2.getLx());
+				businessTypePo.setName(businessTypeVO2.getName());
+				businessTypePos.add(businessTypePo);
+			}
+			businessTypeDao.addBatch(businessTypePos);
+			iBusinessTypeCached.setIBusinessType(ICacheKey.IBusinessTypeCached + type, JSON.toJSONString(businessTypePos));
 		}
 		return businessTypeVOs;
 	}

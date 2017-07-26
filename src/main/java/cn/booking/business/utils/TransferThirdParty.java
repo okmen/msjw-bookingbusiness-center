@@ -13,6 +13,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.booking.business.bean.AppointmentPo;
+import cn.booking.business.bean.BusinessTypePo;
+import cn.booking.business.bean.BusinessTypeVO;
 import cn.booking.business.bean.CarTypePo;
 import cn.booking.business.bean.CarTypeVO;
 import cn.booking.business.bean.IdCardTypePo;
@@ -166,5 +168,33 @@ public class TransferThirdParty {
 			throw e;
 		}
 		return idTypeVos;
+	}
+	
+	public static List<BusinessTypeVO> getBusinessTypes(IBookingBusinessCachedImpl iBookingBusinessCached,String type, String part, String arg0, String arg1) throws Exception {
+		List<BusinessTypeVO> businessTypeVOs = new ArrayList<BusinessTypeVO>();
+		String jkId = "JK04";
+		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("type", type);
+		map.put("part", part);
+		map.put("arg0", null == arg0 ? "" : arg0);
+		map.put("arg1", null == arg1 ? "" : arg1);
+		JSONObject jsonObject = new JSONObject();
+		try {
+			String url = iBookingBusinessCached.getStcUrl();
+			String account = iBookingBusinessCached.getCgsaccount();
+			String password = iBookingBusinessCached.getCgspassword();
+			StringBuffer str=new StringBuffer();
+			str.append("<root><type>").append(type).append("</type>");
+			str.append("<part>").append(part).append("</part>").append("</root>");
+			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
+			JSONObject result = jsonObject.getJSONObject("result");
+			String BusinessTypeVO = result.getString("BusinessTypeVO");
+			businessTypeVOs = JSON.parseArray(BusinessTypeVO, BusinessTypeVO.class);
+			
+		} catch (Exception e) {
+			logger.error("getBusinessTypes 失败 ， map = " + map);
+			throw e;
+		}
+		return businessTypeVOs;
 	}
 }

@@ -32,4 +32,6 @@
 	
 	<bean id="appointmentUnitExecute" class="cn.booking.business.utils.execute.AppointmentUnitExecute" />
 	
+	<bean id="businessTypeExecute" class="cn.booking.business.utils.execute.BusinessTypeExecute" />
+	
 </beans>
