@@ -30,7 +30,7 @@ public class BusinessTypeExecute {
 	
 	public void execute(List<BusinessTypeVO> businessTypeVOsOld, IBookingBusinessCachedImpl iBookingBusinessCached,String type)throws Exception {
 		String key = ICacheKey.IBusinessTypeCached + type;
-		List<BusinessTypeVO> businessTypeVOsNew = TransferThirdParty.getBusinessTypes(iBookingBusinessCached, key, "", "", "");
+		List<BusinessTypeVO> businessTypeVOsNew = TransferThirdParty.getBusinessTypes(iBookingBusinessCached, type, "", "", "");
 		if(!businessTypeVOsOld.equals(businessTypeVOsNew)){
 			List<BusinessTypePo> businessTypePos = new ArrayList<BusinessTypePo>();
 			for(BusinessTypeVO businessTypeVO : businessTypeVOsNew){
