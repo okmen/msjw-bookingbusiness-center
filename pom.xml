@@ -284,12 +284,12 @@
 				<jiaojing.key>94D863D9BE7FB032E6A19430CC892610</jiaojing.key>
 				
 				<!-- 车管所 -->
-				<stcUrl>http://app.stc.gov.cn:8092/book/services/wsBookUniformService</stcUrl>
+				<stcUrl>http://192.168.2.191:8092/book/services/wsBookUniformService</stcUrl>
 				<cgsaccount>cdkjcs</cgsaccount>
 				<cgspassword>4028823f5cec9613015d07046034729c</cgspassword>
 				
 				<!-- 域名地址 -->
-				<templateSendUrl>http://szjj.u-road.com/h5/#/submitSuccess</templateSendUrl>
+				<templateSendUrl>http://gzh.stc.gov.cn/h5/#/submitSuccess</templateSendUrl>
 				
 			</properties>
 		</profile>
