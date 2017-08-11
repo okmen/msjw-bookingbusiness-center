@@ -468,7 +468,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 	public BaseBean createVehicleInfo(CreateVehicleInfoVo vehicleInfoVo) throws Exception {
 		BaseBean refBean = new BaseBean();
-		logger.debug("【预约类服务】机动车预约信息写入createVehicleInfo... 业务类型id=" + vehicleInfoVo.getBusinessTypeId());
+		logger.info("【预约类服务】机动车预约信息写入createVehicleInfo... 业务类型id=" + vehicleInfoVo.getBusinessTypeId());
 
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("orgId", vehicleInfoVo.getOrgId()); // 预约地点
@@ -524,7 +524,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			str.append("<bookerMobile>").append(vehicleInfoVo.getBookerMobile()).append("</bookerMobile>");
 			str.append("<msgNumber>").append(vehicleInfoVo.getMsgNumber()).append("</msgNumber>");
 			str.append("</root>");
-			logger.debug("【预约类服务】机动车预约信息请求报文xml， data = " + str);
+			logger.info("【预约类服务】机动车预约信息请求报文xml， data = " + str);
 
 			jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, str.toString(), account, password);
 			String code = jsonObject.getString("code");
@@ -533,7 +533,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			refBean.setCode(code);
 			refBean.setMsg(msg);
 			refBean.setData(result);
-			logger.debug("【预约类服务】机动车预约信息写入结果:" + jsonObject);
+			logger.info("【预约类服务】机动车预约信息写入结果:" + jsonObject);
 		} catch (Exception e) {
 			logger.error("【预约类服务】机动车预约信息写入异常 ， map = " + map);
 			throw e;
@@ -545,7 +545,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	@Override
 	public BaseBean createDriveinfo(CreateDriveinfoVo createDriveinfoVo) throws Exception {
 		BaseBean refBean = new BaseBean();
-		logger.debug("【预约类服务】驾驶证预约信息写入createDriveinfo... 业务类型id=" + createDriveinfoVo.getBusinessTypeId());
+		logger.info("【预约类服务】驾驶证预约信息写入createDriveinfo... 业务类型id=" + createDriveinfoVo.getBusinessTypeId());
 		StringBuffer sb = new StringBuffer();
 		sb.append("<root>")
 		.append("<orgId>").append(createDriveinfoVo.getOrgId()).append("</orgId>")	
@@ -563,7 +563,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		.append("<msgNumber>").append(createDriveinfoVo.getMsgNumber()).append("</msgNumber>")
 		.append("</root>");
 		logger.debug("【预约类服务】驾驶证预约信息, createDriveinfoVo = " + createDriveinfoVo);
-		logger.debug("【预约类服务】驾驶证预约信息请求报文xml， data = " + sb.toString());
+		logger.info("【预约类服务】驾驶证预约信息请求报文xml， data = " + sb.toString());
 		JSONObject jsonObject = new JSONObject();
 		String jkId = "JK01";
 		String method = "createDriveinfo";
@@ -575,7 +575,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			refBean.setCode(jsonObject.getString("code"));
 			refBean.setMsg(jsonObject.getString("msg"));
 			refBean.setData(jsonObject.getString("result"));
-			logger.debug("【预约类服务】驾驶证预约信息写入结果:" + jsonObject);
+			logger.info("【预约类服务】驾驶证预约信息写入结果:" + jsonObject);
 		} catch (Exception e) {
 			logger.error("【预约类服务】驾驶证预约信息写入异常 ， createDriveinfoVo = " + createDriveinfoVo);
 			throw e;
@@ -589,6 +589,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		.append("<bookNumber>").append(bookNumber).append("</bookNumber>")	
 		.append("<mobile>").append(mobile).append("</mobile>")	
 		.append("</root>");
+		logger.info("【预约类服务】取消预约请求报文xml， data = " + sb.toString());
 		SmsInfoVO smsInfoVO = null;
 		String method = "cancel";
 		JSONObject jsonObject = new JSONObject();
@@ -602,6 +603,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			String msg = jsonObject.getString("msg");
             String  result = jsonObject.getString("result");
 			smsInfoVO = JSON.parseObject(JSON.toJSONString(jsonObject), SmsInfoVO.class);
+			logger.info("【预约类服务】取消预约结果:" + smsInfoVO);
 		} catch (Exception e) {
 			logger.error("cancel 失败 ， businessType = " + businessType + "bookNumber = " + bookNumber + "mobile = " +mobile );
 			throw e;
@@ -621,7 +623,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	 */
 	public BaseBean getDriveInfo(String bookerNumber, String idNumber, String businessTypeId, String organizationId)
 			throws Exception {
-		logger.debug("【预约类服务】获取驾驶证预约信息getDriveInfo...");
+		logger.info("【预约类服务】获取驾驶证预约信息getDriveInfo...");
 		BaseBean baseBean = new BaseBean();
 		String jkId = "JK24";	//接口编号
 		StringBuffer sb = new StringBuffer();
@@ -637,7 +639,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			String url = iBookingBusinessCached.getStcUrl();
 			String account = iBookingBusinessCached.getCgsaccount();
 			String password = iBookingBusinessCached.getCgspassword();
-			logger.debug("【预约类服务】获取驾驶证预约信息请求报文xml， data = " + data);
+			logger.info("【预约类服务】获取驾驶证预约信息请求报文xml， data = " + data);
 			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
 			String code = jsonObject.getString("code");
@@ -657,7 +659,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				baseBean.setCode(code);
 				baseBean.setMsg(msg);
 			}
-			logger.debug("【预约类服务】获取驾驶证预约信息结果:" + jsonObject);
+			logger.info("【预约类服务】获取驾驶证预约信息结果:" + jsonObject);
 		} catch (Exception e) {
 			logger.error("【预约类服务】获取驾驶证预约信息异常， sb = " + sb.toString());
 			throw e;
@@ -678,7 +680,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	 */
 	public BaseBean getVehicleInfo(String bookerNumber, String idNumber, String platNumber, String businessTypeId,
 			String organizationId) throws Exception {
-		logger.debug("【预约类服务】获取机动车预约信息getVehicleInfo...");
+		logger.info("【预约类服务】获取机动车预约信息getVehicleInfo...");
 		BaseBean baseBean = new BaseBean();
 		String jkId = "JK23";	//接口编号
 
@@ -695,7 +697,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			String url = iBookingBusinessCached.getStcUrl();
 			String account = iBookingBusinessCached.getCgsaccount();
 			String password = iBookingBusinessCached.getCgspassword();
-			logger.debug("【预约类服务】获取机动车预约信息请求报文xml， data = " + data);
+			logger.info("【预约类服务】获取机动车预约信息请求报文xml， data = " + data);
 			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
 			String code = jsonObject.getString("code");
@@ -714,7 +716,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				baseBean.setCode(code);
 				baseBean.setMsg(msg);
 			}
-			logger.debug("【预约类服务】获取机动车预约信息结果:" + jsonObject);
+			logger.info("【预约类服务】获取机动车预约信息结果:" + jsonObject);
 		} catch (Exception e) {
 			logger.error("【预约类服务】获取机动车预约信息异常， sb = " + sb.toString());
 			throw e;
@@ -731,7 +733,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	 * @throws Exception
 	 */
 	public BaseBean createTemporaryLicenseVehicleInfo(CreateTemporaryLicenseVehicleInfoVo vo) throws Exception {
-		logger.debug("【预约类服务】核发临牌预约信息写入createTemporaryLicenseVehicleInfo... 业务类型ID = " + vo.getBusinessTypeId());
+		logger.info("【预约类服务】核发临牌预约信息写入createTemporaryLicenseVehicleInfo... 业务类型ID = " + vo.getBusinessTypeId());
 		BaseBean baseBean = new BaseBean();
 		String jkId = "JK16";	//接口编号
 		
@@ -765,7 +767,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			String url = iBookingBusinessCached.getStcUrl();
 			String account = iBookingBusinessCached.getCgsaccount();
 			String password = iBookingBusinessCached.getCgspassword();
-			logger.debug("【预约类服务】核发临牌预约信息请求报文xml， data = " + data);
+			logger.info("【预约类服务】核发临牌预约信息请求报文xml， data = " + data);
 			//jsonObject = WebServiceClient.vehicleAdministrationWebService(url, method, map);
 			JSONObject jsonObject = WebServiceClient.vehicleAdministrationWebServiceNew(url, jkId, data, account, password);
 			
@@ -786,7 +788,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				baseBean.setMsg(jsonObject.getString("msg"));
 				baseBean.setData(jsonObject.getString("result"));
 			}
-			logger.debug("【预约类服务】核发临牌预约信息写入结果:" + jsonObject);
+			logger.info("【预约类服务】核发临牌预约信息写入结果:" + jsonObject);
 		} catch (Exception e) {
 			logger.error("【预约类服务】核发临牌预约信息写入异常 ， vo = " + vo);
 			throw e;
