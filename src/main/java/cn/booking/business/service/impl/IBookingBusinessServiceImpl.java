@@ -255,7 +255,18 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				idCardTypePos.add(idCardTypePo);
 			}
 			iIdCardTypeDao.addBatch(idCardTypePos);
-			idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached + type + businessTypeId , JSON.toJSONString(idTypeVos));
+			
+			List<IdCardTypePo> idCardTypePos2 = new ArrayList<IdCardTypePo>();
+			for(IdTypeVO idTypeVO2 : idTypeVos){
+				IdCardTypePo idCardTypePo = new IdCardTypePo();
+				idCardTypePo.setCode(idTypeVO2.getCode());
+				idCardTypePo.setCreateDate(new Date());
+				idCardTypePo.setDescription(idTypeVO2.getDescription());
+				idCardTypePo.setIdcardTypeId(idTypeVO2.getId());
+				idCardTypePo.setName(idTypeVO2.getName());
+				idCardTypePos2.add(idCardTypePo);
+			}
+			idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached + type + businessTypeId , JSON.toJSONString(idCardTypePos2));
 		}
 		return idTypeVos;
 	}
