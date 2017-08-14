@@ -206,8 +206,8 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	public List<IdTypeVO> getIdTypes(String businessTypeId, String arg0, String arg1 ,String type) throws Exception {
 		List<IdTypeVO> idTypeVos = new ArrayList<>();
 		List<IdTypeVO> idTypeVos2 = new ArrayList<>();
-		String json = idCardTypeCached.getIIdCardTypeByKey(ICacheKey.IIdCardTypeCached + type + businessTypeId);
-		if(StringUtils.isNotBlank(json)){
+		String json = idCardTypeCached.getIIdCardTypeByKey(type + businessTypeId + ICacheKey.IIdCardTypeCached);
+		if(StringUtils.isNotBlank(json)&&!("[]").equals(json)){
 			idTypeVos = JSON.parseArray(json, IdTypeVO.class);
 			for(IdTypeVO idTypeVO : idTypeVos){
 				idTypeVO.setId(idTypeVO.getIdcardTypeId());
@@ -222,7 +222,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			}
 		}else{
 			idTypeVos2 = TransferThirdParty.getIdTypes(iBookingBusinessCached, businessTypeId, arg0, arg1);
-			if (type == "0") {
+			if ("0".equals(type)) {
 				List<String> list = new ArrayList<>();
 				list.add("居民身份证");
 				list.add("军官证");
@@ -235,13 +235,15 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 						idTypeVos.add(idTypeVO);
 					}
 				}
-			}else if(type == "1"){
+			}else if("1".equals(type)){
 				for (IdTypeVO idTypeVO : idTypeVos2) {
 					String name = idTypeVO.getName();
 					if (!"居民户口簿".equals(name)) {
 						idTypeVos.add(idTypeVO);
 					}
 				}
+			}else{
+				idTypeVos = idTypeVos2;
 			}
 			//存mysql
 			List<IdCardTypePo> idCardTypePos = new ArrayList<IdCardTypePo>();
@@ -266,7 +268,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				idCardTypePo.setName(idTypeVO2.getName());
 				idCardTypePos2.add(idCardTypePo);
 			}
-			idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached + type + businessTypeId , JSON.toJSONString(idCardTypePos2));
+			idCardTypeCached.setIIdCardType(type + businessTypeId + ICacheKey.IIdCardTypeCached, JSON.toJSONString(idCardTypePos2));
 		}
 		return idTypeVos;
 	}
