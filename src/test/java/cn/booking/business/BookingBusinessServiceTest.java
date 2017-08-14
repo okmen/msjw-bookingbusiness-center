@@ -389,7 +389,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void getIdTypes() throws Exception {
-			List<IdTypeVO>  idTypeVOs =	iBookingBusinessService.getIdTypes("e4e48584399473d201399483d85a2b31", "", "");
+			List<IdTypeVO>  idTypeVOs =	iBookingBusinessService.getIdTypes("e4e48584399473d201399483d85a2b31", "", "" ,"1");
 			System.out.println(idTypeVOs);
 	}
 	@Test
@@ -580,7 +580,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void cancel() throws Exception{
-		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "170720149850", "13627267056");
+		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "170811090347", "13627267056");
 		System.out.println(smsInfoVO);
 	}
 	@Test

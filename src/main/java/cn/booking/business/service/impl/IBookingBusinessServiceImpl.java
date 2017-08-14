@@ -203,9 +203,10 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 	}
 
 	@Override
-	public List<IdTypeVO> getIdTypes(String businessTypeId, String arg0, String arg1) throws Exception {
-		List<IdTypeVO> idTypeVos = null;
-		String json = idCardTypeCached.getIIdCardTypeByKey(ICacheKey.IIdCardTypeCached + businessTypeId);
+	public List<IdTypeVO> getIdTypes(String businessTypeId, String arg0, String arg1 ,String type) throws Exception {
+		List<IdTypeVO> idTypeVos = new ArrayList<>();
+		List<IdTypeVO> idTypeVos2 = new ArrayList<>();
+		String json = idCardTypeCached.getIIdCardTypeByKey(ICacheKey.IIdCardTypeCached + type + businessTypeId);
 		if(StringUtils.isNotBlank(json)){
 			idTypeVos = JSON.parseArray(json, IdTypeVO.class);
 			for(IdTypeVO idTypeVO : idTypeVos){
@@ -220,7 +221,28 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				logger.error("存储到缓存 错误", e);
 			}
 		}else{
-			idTypeVos = TransferThirdParty.getIdTypes(iBookingBusinessCached, businessTypeId, arg0, arg1);
+			idTypeVos2 = TransferThirdParty.getIdTypes(iBookingBusinessCached, businessTypeId, arg0, arg1);
+			if (type == "0") {
+				List<String> list = new ArrayList<>();
+				list.add("居民身份证");
+				list.add("军官证");
+				list.add("军官离退休证");
+				list.add("外交人员身份证明");
+				list.add("士兵证");
+				list.add("境外人员身份证明");
+				for (IdTypeVO idTypeVO : idTypeVos2) {
+					if (list.contains(idTypeVO.getName())) {
+						idTypeVos.add(idTypeVO);
+					}
+				}
+			}else if(type == "1"){
+				for (IdTypeVO idTypeVO : idTypeVos2) {
+					String name = idTypeVO.getName();
+					if (!"居民户口簿".equals(name)) {
+						idTypeVos.add(idTypeVO);
+					}
+				}
+			}
 			//存mysql
 			List<IdCardTypePo> idCardTypePos = new ArrayList<IdCardTypePo>();
 			for(IdTypeVO idTypeVO2 : idTypeVos){
@@ -233,7 +255,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 				idCardTypePos.add(idCardTypePo);
 			}
 			iIdCardTypeDao.addBatch(idCardTypePos);
-			idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached + businessTypeId, JSON.toJSONString(idCardTypePos));
+			idCardTypeCached.setIIdCardType(ICacheKey.IIdCardTypeCached + type + businessTypeId , JSON.toJSONString(idTypeVos));
 		}
 		return idTypeVos;
 	}
