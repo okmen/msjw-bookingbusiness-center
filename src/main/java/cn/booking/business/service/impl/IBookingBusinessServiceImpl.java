@@ -245,7 +245,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 			}
 			//存mysql
 			List<IdCardTypePo> idCardTypePos = new ArrayList<IdCardTypePo>();
-			for(IdTypeVO idTypeVO2 : idTypeVos){
+			for(IdTypeVO idTypeVO2 : idTypeVos2){
 				IdCardTypePo idCardTypePo = new IdCardTypePo();
 				idCardTypePo.setCode(idTypeVO2.getCode());
 				idCardTypePo.setCreateDate(new Date());
