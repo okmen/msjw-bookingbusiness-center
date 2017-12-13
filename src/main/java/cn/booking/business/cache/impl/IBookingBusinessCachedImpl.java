@@ -48,6 +48,9 @@ public class IBookingBusinessCachedImpl implements IBookingBusinessCached{
     @Value("${templateSendUrl}")
     private String templateSendUrl;
     
+    @Value("${msjwTemplateSendUrl}")
+    private String msjwTemplateSendUrl;
+    
 	public String getUserid() {
 		return userid;
 	}
@@ -80,6 +83,11 @@ public class IBookingBusinessCachedImpl implements IBookingBusinessCached{
 
 	public String getTemplateSendUrl() {
 		return templateSendUrl;
+	}
+
+
+	public String getMsjwTemplateSendUrl() {
+		return msjwTemplateSendUrl;
 	}
 
 
