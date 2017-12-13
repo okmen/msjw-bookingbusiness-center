@@ -1080,7 +1080,7 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 
 	@Override
 	public String getMsjwTemplateSendUrl() {
-		String url = iBookingBusinessCached.getMsjwTemplateSendUrl();
+		String url = iBookingBusinessCached.getMsjwTemplateSendUrl() + "?source=M&";
 		logger.info("获取到的民生警务结果页域名地址是：" + url);
 		return url;
 	}
