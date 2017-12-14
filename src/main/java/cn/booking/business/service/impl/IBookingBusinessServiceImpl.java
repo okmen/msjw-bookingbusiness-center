@@ -1084,5 +1084,12 @@ public class IBookingBusinessServiceImpl implements IBookingBusinessService {
 		logger.info("获取到的民生警务结果页域名地址是：" + url);
 		return url;
 	}
+
+	@Override
+	public String getMsjwBookTemplateId() {
+		String templateId = iBookingBusinessCached.getMsjwBookTemplateId();
+		logger.debug("民生警务templateId：" + templateId);
+		return templateId;
+	}
 	
 }

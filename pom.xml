@@ -172,6 +172,8 @@
 				<templateSendUrl>http://testh5.chudaokeji.com/h5/#/submitSuccess</templateSendUrl>
 				<!-- 民生警务结果页域名地址 -->
 				<msjw.templateSendUrl>http://szjjmsjw.chudaokeji.com/#/submitSuccess</msjw.templateSendUrl>
+				<!-- 民生警务预约类模板id -->
+				<msjw.bookTemplateId>JJ4UCQVHzTBko44HAUq01Il1MCQolmxRG9G7wmUmefg</msjw.bookTemplateId>
 			</properties>
 		</profile>
 
@@ -234,6 +236,8 @@
 				<templateSendUrl>http://testh5.chudaokeji.com/h5/#/submitSuccess</templateSendUrl>
 				<!-- 民生警务结果页域名地址 -->
 				<msjw.templateSendUrl>http://szjjmsjw.chudaokeji.com/#/submitSuccess</msjw.templateSendUrl>
+				<!-- 民生警务预约类模板id -->
+				<msjw.bookTemplateId>JJ4UCQVHzTBko44HAUq01Il1MCQolmxRG9G7wmUmefg</msjw.bookTemplateId>
 			</properties>
 		</profile>
 
@@ -296,6 +300,8 @@
 				<templateSendUrl>http://gzh.stc.gov.cn/h5/#/submitSuccess</templateSendUrl>
 				<!-- 民生警务结果页域名地址 -->
 				<msjw.templateSendUrl>http://szjjmsjw.chudaokeji.com/#/submitSuccess</msjw.templateSendUrl>
+				<!-- 民生警务预约类模板id -->
+				<msjw.bookTemplateId>_yG3FzeSnyyciCHcr-q3UT0dHcgErQSzjIziS4ggfrM</msjw.bookTemplateId>
 			</properties>
 		</profile>
 	</profiles>
