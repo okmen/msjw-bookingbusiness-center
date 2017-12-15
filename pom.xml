@@ -299,7 +299,7 @@
 				<!-- 域名地址 -->
 				<templateSendUrl>http://gzh.stc.gov.cn/h5/#/submitSuccess</templateSendUrl>
 				<!-- 民生警务结果页域名地址 -->
-				<msjw.templateSendUrl>http://szjjmsjw.chudaokeji.com/#/submitSuccess</msjw.templateSendUrl>
+				<msjw.templateSendUrl>http://gzh.stc.gov.cn/msjw/#/submitSuccess</msjw.templateSendUrl>
 				<!-- 民生警务预约类模板id -->
 				<msjw.bookTemplateId>_yG3FzeSnyyciCHcr-q3UT0dHcgErQSzjIziS4ggfrM</msjw.bookTemplateId>
 			</properties>
