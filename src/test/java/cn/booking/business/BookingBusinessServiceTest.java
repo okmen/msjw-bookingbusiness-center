@@ -3,6 +3,7 @@ package cn.booking.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,29 @@ public class BookingBusinessServiceTest extends TestCase {
     @Qualifier("bookingBusinessService")
     private IBookingBusinessService iBookingBusinessService;
 	
+	@Test
+	public void test() throws Exception {
+		List<String> list = new ArrayList<>();
+		Random r = new Random();
+		while (list.size() < 100) {
+			String num = "88";
+			int threeNum = r.nextInt(10);
+			if (8 != threeNum) {
+				num = num + threeNum;
+				while (num.length() < 6) {
+					int nextInt = r.nextInt(10);
+					num = num + nextInt;
+				}
+				if (!list.contains(num)) {
+					list.add(num);
+				}
+			}
+		}
+		System.out.println(list.size());
+		for (String string : list) {
+			System.out.println(string);
+		}
+	}
 	/**
 	 * 
 	 * @throws Exception
@@ -395,7 +419,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	@Test
 	public void simpleSendMessage() throws Exception{
 		SmsInfoVO smsInfoVO = iBookingBusinessService.simpleSendMessage("13627267056", 
-				"e4e48584399473d20139947f125e2b2c", "1", "192.168.1.247", "0", "测试", "42138119910422133X", "42138119910422133X", "ZJ20");
+				"e4e48584399473d20139947f125e2b2c", "1", "192.168.1.247", "0", "測試", "42138119910422133X", "42138119910422133X", "ZJ20");
 		System.out.println(smsInfoVO);
 	}
 	@Test
@@ -580,7 +604,7 @@ public class BookingBusinessServiceTest extends TestCase {
 	
 	@Test
 	public void cancel() throws Exception{
-		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("1", "170811090347", "13627267056");
+		SmsInfoVO smsInfoVO = iBookingBusinessService.cancel("2", "18032315592F", "17603061557");
 		System.out.println(smsInfoVO);
 	}
 	@Test

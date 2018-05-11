@@ -163,8 +163,8 @@
 				
 				<!-- 车管所 -->
 				
-				<stcUrl>https://szjjapi.chudaokeji.com/book/services/wsBookUniformService</stcUrl>
-<!-- 				<stcUrl>http://app.stc.gov.cn:8092/book/services/wsBookUniformService</stcUrl> -->
+				<!-- <stcUrl>https://szjjapi.chudaokeji.com/book/services/wsBookUniformService</stcUrl> -->
+				<stcUrl>http://119.23.151.161:7500/szjjapi/</stcUrl>
 				<cgsaccount>cdkjcs</cgsaccount>
 				<cgspassword>4028823f5cec9613015d07046034729c</cgspassword>
 				
