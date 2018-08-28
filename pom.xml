@@ -155,11 +155,11 @@
 				<isMWuserResultsTaskNeed>0</isMWuserResultsTaskNeed>
 
 				<!-- 警司通参数 -->
-				<jiaojing.userid>WX02</jiaojing.userid>
-				<jiaojing.userpwd>WX02@168</jiaojing.userpwd>
+				<jiaojing.userid>msjwpt</jiaojing.userid>
+				<jiaojing.userpwd>msjw@2017</jiaojing.userpwd>
 				<jiaojing.url>http://123.56.180.216:19002/xxfbpt/services/xxfbptservice</jiaojing.url>
 				<jiaojing.method>xxptSchuding</jiaojing.method>
-				<jiaojing.key>94D863D9BE7FB032E6A19430CC892610</jiaojing.key>
+				<jiaojing.key>ZG20YD14WFJB2013XXLRJK89</jiaojing.key>
 				
 				<!-- 车管所 -->
 				
@@ -221,11 +221,11 @@
 				<isMWuserResultsTaskNeed>0</isMWuserResultsTaskNeed>
 
 				<!-- 警司通参数 -->
-				<jiaojing.userid>WX02</jiaojing.userid>
-				<jiaojing.userpwd>WX02@168</jiaojing.userpwd>
+				<jiaojing.userid>msjwpt</jiaojing.userid>
+				<jiaojing.userpwd>msjw@2017</jiaojing.userpwd>
 				<jiaojing.url>http://123.56.180.216:19002/xxfbpt/services/xxfbptservice</jiaojing.url>
 				<jiaojing.method>xxptSchuding</jiaojing.method>
-				<jiaojing.key>94D863D9BE7FB032E6A19430CC892610</jiaojing.key>
+				<jiaojing.key>ZG20YD14WFJB2013XXLRJK89</jiaojing.key>
 
 				<!-- 车管所 -->
 				<stcUrl>https://szjjapi.chudaokeji.com/book/services/wsBookUniformService</stcUrl>
@@ -284,12 +284,11 @@
 				<isMWuserResultsTaskNeed>1</isMWuserResultsTaskNeed>
 
 				<!-- 警司通参数 -->
-				<jiaojing.userid>WX02</jiaojing.userid>
-				<jiaojing.userpwd>WX02@168</jiaojing.userpwd>
-				<!-- <jiaojing.url>http://192.168.2.147:9080/xxfbpt/services/xxfbptservice?wsdl</jiaojing.url> -->
+				<jiaojing.userid>msjwpt</jiaojing.userid>
+				<jiaojing.userpwd>msjw@2017</jiaojing.userpwd>
 				<jiaojing.url>http://api.szjj.me:9080/xxfbpt/services/xxfbptservice</jiaojing.url>
 				<jiaojing.method>xxptSchuding</jiaojing.method>
-				<jiaojing.key>94D863D9BE7FB032E6A19430CC892610</jiaojing.key>
+				<jiaojing.key>ZG20YD14WFJB2013XXLRJK89</jiaojing.key>
 				
 				<!-- 车管所 -->
 				<stcUrl>http://192.168.2.191:8092/book/services/wsBookUniformService</stcUrl>
